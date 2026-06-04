@@ -3158,6 +3158,14 @@ body {
   box-shadow: 0 8px 32px rgba(15, 23, 42, 0.08);
   overflow: hidden;
   text-align: left;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.team-lead-list > .fade-in {
+  width: 100%;
+  min-width: 0;
 }
 
 .team-lead-card--reverse {
@@ -3176,6 +3184,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100%;
+  min-width: 0;
 }
 
 .team-lead-photo-wrap {
@@ -3216,6 +3225,9 @@ body {
 
 .team-lead-body {
   padding: 32px 36px 36px;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .team-lead-body-label {
@@ -3234,6 +3246,8 @@ body {
   line-height: 1.15;
   color: #1a1a1a;
   margin: 0 0 8px;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .team-lead-title {
@@ -3241,6 +3255,9 @@ body {
   font-weight: 600;
   margin: 0 0 18px;
   line-height: 1.4;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
 }
 
 .team-lead-bio {
@@ -3248,6 +3265,8 @@ body {
   line-height: 1.7;
   color: var(--text-light);
   margin: 0 0 20px;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .team-lead-actions {
@@ -3289,14 +3308,16 @@ body {
 
 .team-lead-certs-grid {
   display: grid;
-  grid-template-columns: repeat(10, 48px);
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(40px, 48px));
+  gap: 8px;
   max-width: 100%;
 }
 
 .team-lead-cert-tile {
-  width: 48px;
-  height: 48px;
+  width: 100%;
+  max-width: 48px;
+  aspect-ratio: 1;
+  height: auto;
   border-radius: 10px;
   background: #fff;
   border: 1px solid var(--border);
@@ -3337,6 +3358,47 @@ body {
   left: 0;
   color: #22c55e;
   font-weight: 700;
+}
+
+@media (max-width: 480px) {
+  .team-leadership-header {
+    margin-bottom: 32px;
+  }
+
+  .team-lead-body {
+    padding: 20px 16px 24px;
+  }
+
+  .team-lead-name {
+    font-size: 22px;
+  }
+
+  .team-lead-title {
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .team-lead-bio {
+    font-size: 13.5px;
+  }
+
+  .team-lead-badge-pill {
+    font-size: 10px;
+    padding: 7px 14px;
+    letter-spacing: 0.35px;
+    text-align: center;
+    line-height: 1.35;
+  }
+
+  .team-lead-photo-wrap,
+  .team-lead-photo-wrap img {
+    min-height: 200px;
+  }
+
+  .team-lead-cta {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 /* Team — core */
@@ -7948,12 +8010,18 @@ body {
   }
 
   .team-lead-certs-grid {
-    grid-template-columns: repeat(5, 48px);
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    gap: 8px;
+  }
+
+  .team-lead-body {
+    padding: 24px 20px 28px;
   }
 
   .team-lead-card,
   .team-lead-card--reverse {
     grid-template-columns: 1fr;
+    padding: 0 !important;
   }
 
   .team-lead-card--reverse .team-lead-media,

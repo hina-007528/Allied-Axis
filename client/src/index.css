@@ -1424,7 +1424,7 @@ h1, h2, h3, h4, h5 { line-height: 1.2; font-weight: 700; color: var(--text); }
 @media (max-width: 640px) {
   .team-grid { grid-template-columns: 1fr; max-width: 100%; }
   .team-core-grid { grid-template-columns: 1fr; }
-  .team-lead-card { padding: 20px 16px; }
+  .team-lead-card { padding: 0; }
   .team-lead-photo,
   .team-lead-photo img { min-height: 220px; }
 }
@@ -1770,6 +1770,12 @@ h1, h2, h3, h4, h5 { line-height: 1.2; font-weight: 700; color: var(--text); }
 
   .team-grid { grid-template-columns: 1fr; gap: 20px; max-width: 100%; }
   .team-card { padding: 24px 18px; }
+
+  .team-lead-body { padding: 18px 14px 22px; }
+  .team-lead-name { font-size: 21px; }
+  .team-lead-title { font-size: 13.5px; }
+  .team-lead-bio { font-size: 13px; }
+  .team-leadership-heading { font-size: 24px; }
   .team-img { width: 100px; height: 100px; }
   .team-apply-form { padding: 24px 18px; }
 
