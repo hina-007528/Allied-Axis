@@ -63,7 +63,7 @@ export default function useCountUp(target, active, duration = 1800, delay = 0) {
       cancelled = true;
       cancelAnimationFrame(frameId);
     };
-  }, [active, end, duration, delay, target, prefix, suffix, decimals]);
+  }, [active, end, duration, delay, target, prefix, suffix, decimals, zeroDisplay]);
 
   return { display, complete };
 }

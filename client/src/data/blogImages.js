@@ -57,6 +57,9 @@ export function getBlogImageSrc(slug, category) {
   return getBlogCover(slug, category).src;
 }
 
-export default { ...blogCoverImages, ...Object.fromEntries(
-  Object.entries(SITE_ASSETS).map(([k, v]) => [k, v.src])
-) };
+const blogImageMap = {
+  ...blogCoverImages,
+  ...Object.fromEntries(Object.entries(SITE_ASSETS).map(([k, v]) => [k, v.src])),
+};
+
+export default blogImageMap;

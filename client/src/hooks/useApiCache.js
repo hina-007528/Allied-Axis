@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const cache = new Map();
 
@@ -6,6 +6,8 @@ export default function useApiCache(key, fetcher, { enabled = true } = {}) {
   const [data, setData] = useState(() => (cache.has(key) ? cache.get(key).data : null));
   const [loading, setLoading] = useState(enabled && !cache.has(key));
   const [error, setError] = useState(null);
+  const fetcherRef = useRef(fetcher);
+  fetcherRef.current = fetcher;
 
   useEffect(() => {
     if (!enabled) return undefined;
@@ -22,7 +24,7 @@ export default function useApiCache(key, fetcher, { enabled = true } = {}) {
     setLoading(true);
 
     Promise.resolve()
-      .then(() => fetcher())
+      .then(() => fetcherRef.current())
       .then((result) => {
         if (cancelled) return;
         cache.set(key, { data: result, error: null });
