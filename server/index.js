@@ -59,6 +59,15 @@ app.get('/api/v1/health', (req, res) => {
   res.status(200).json({ success: true, message: 'API is running', timestamp: new Date().toISOString() });
 });
 
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Allied Axis API — use /api/v1/* routes',
+    health: '/api/v1/health',
+    contactSubmit: 'POST /api/v1/contact',
+  });
+});
+
 const clientBuildDir = path.join(__dirname, '../client/build');
 const shouldServeClient =
   process.env.SERVE_CLIENT !== 'false' &&

@@ -1,3 +1,8 @@
 {
+  "build": {
+    "env": {
+      "REACT_APP_API_URL": "https://allied-axis-api.onrender.com/api/v1"
+    }
+  },
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }
