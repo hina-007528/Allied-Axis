@@ -6,10 +6,14 @@ const SERVICE_LABELS = {
   website: 'Website & Technical',
   'ai-automation': 'AI Workflow & Automation',
   marketing: 'Performance Marketing',
-  seo: 'SEO & Growth Intelligence',
+  seo: 'SEO & Organic',
   'lead-gen': 'Lead Generation',
   social: 'Social Media Management',
   strategy: 'Strategy & Advisory',
+  'essential-launch': 'Essential Launch',
+  'growth-launch': 'Growth Launch',
+  'complete-launch': 'Complete Launch',
+  b2b: 'B2B Growth',
   other: 'Other',
 };
 
@@ -29,17 +33,39 @@ function isSmtpConfigured() {
 
 function getTransporter() {
   if (!transporter) {
+    const port = Number(process.env.SMTP_PORT) || 587;
     transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST || 'smtp.gmail.com',
-      port: Number(process.env.SMTP_PORT) || 587,
-      secure: false,
+      port,
+      secure: port === 465,
       auth: {
         user: process.env.SMTP_USER,
         pass: smtpPassword(),
       },
+      connectionTimeout: 15000,
+      greetingTimeout: 15000,
     });
   }
   return transporter;
+}
+
+/** Call once on server boot — logs whether Gmail SMTP credentials work on Render. */
+async function verifySmtpConnection() {
+  if (!isSmtpConfigured()) {
+    logger.warn(
+      'SMTP not configured — set SMTP_USER + SMTP_PASS (Gmail App Password) and CONTACT_NOTIFY_EMAIL on Render'
+    );
+    return false;
+  }
+  try {
+    await getTransporter().verify();
+    const to = process.env.CONTACT_NOTIFY_EMAIL || process.env.SMTP_USER;
+    logger.info(`SMTP ready — contact leads will be sent to ${to}`);
+    return true;
+  } catch (err) {
+    logger.error(`SMTP verification failed: ${err.message}`);
+    return false;
+  }
 }
 
 function formatContactHtml(contact) {
@@ -203,4 +229,5 @@ module.exports = {
   sendContactLeadEmail,
   sendTeamApplicationEmail,
   isSmtpConfigured,
+  verifySmtpConnection,
 };

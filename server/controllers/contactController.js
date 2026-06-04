@@ -44,9 +44,16 @@ exports.submitContact = asyncHandler(async (req, res, next) => {
   });
 
   // Respond before SMTP — avoids client timeout on Render free tier / slow mail
-  sendContactLeadEmail(contact).catch((err) => {
-    logger.error(`Contact notification email failed: ${err.message}`);
-  });
+  sendContactLeadEmail(contact)
+    .then((sent) => {
+      if (sent) logger.info(`Contact lead email sent for ${contact._id}`);
+    })
+    .catch((err) => {
+      logger.error(`Contact notification email failed: ${err.message}`, {
+        code: err.code,
+        response: err.response,
+      });
+    });
 });
 
 exports.getContacts = asyncHandler(async (req, res) => {
