@@ -18,7 +18,11 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response.data,
   (error) => {
-    const message = error.response?.data?.error || error.message || 'Something went wrong';
+    let message = error.response?.data?.error || error.message || 'Something went wrong';
+    if (error.code === 'ECONNABORTED' || /timeout/i.test(message)) {
+      message =
+        'The server is taking longer than usual (it may be waking up). Please wait a few seconds and try again.';
+    }
     return Promise.reject(new Error(message));
   }
 );
@@ -44,9 +48,11 @@ export const testimonialService = {
   getFeatured: () => api.get('/testimonials/featured'),
 };
 
+const CONTACT_TIMEOUT_MS = 60000;
+
 export const contactService = {
-  submit: (data) => api.post('/contact', data),
-  subscribe: (email) => api.post('/contact/subscribe', { email }),
+  submit: (data) => api.post('/contact', data, { timeout: CONTACT_TIMEOUT_MS }),
+  subscribe: (email) => api.post('/contact/subscribe', { email }, { timeout: CONTACT_TIMEOUT_MS }),
 };
 
 export const teamService = {

@@ -27,15 +27,13 @@ exports.submitTeamApplication = asyncHandler(async (req, res) => {
 
   logger.info(`New team application from ${application.email}`);
 
-  try {
-    await sendTeamApplicationEmail(application, req.file);
-  } catch (err) {
-    logger.error(`Team application email failed: ${err.message}`);
-  }
-
   res.status(201).json({
     success: true,
     message: 'Thank you! Your application was received. We will review it and get back to you soon.',
     data: { id: application._id },
+  });
+
+  sendTeamApplicationEmail(application, req.file).catch((err) => {
+    logger.error(`Team application email failed: ${err.message}`);
   });
 });

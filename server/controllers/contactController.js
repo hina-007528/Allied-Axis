@@ -37,16 +37,15 @@ exports.submitContact = asyncHandler(async (req, res, next) => {
   const contact = await Contact.create(payload);
   logger.info(`New contact submission from ${contact.email}`);
 
-  try {
-    await sendContactLeadEmail(contact);
-  } catch (err) {
-    logger.error(`Contact notification email failed: ${err.message}`);
-  }
-
   res.status(201).json({
     success: true,
     message: 'Thank you for reaching out. We will get back to you within 24 hours.',
     data: { id: contact._id },
+  });
+
+  // Respond before SMTP — avoids client timeout on Render free tier / slow mail
+  sendContactLeadEmail(contact).catch((err) => {
+    logger.error(`Contact notification email failed: ${err.message}`);
   });
 });
 
