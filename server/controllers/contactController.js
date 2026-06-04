@@ -5,8 +5,36 @@ const AppError = require('../utils/AppError');
 const logger = require('../utils/logger');
 const { sendContactLeadEmail } = require('../utils/email');
 
-exports.submitContact = asyncHandler(async (req, res) => {
-  const contact = await Contact.create(req.body);
+exports.submitContact = asyncHandler(async (req, res, next) => {
+  const intent = req.body.intent;
+  const payload = {
+    name: String(req.body.name || '').trim(),
+    email: String(req.body.email || '').trim().toLowerCase(),
+    phone: String(req.body.phone || '').trim(),
+    company: String(req.body.company || '').trim(),
+    service: String(req.body.service || '').trim(),
+    budget: String(req.body.budget || '').trim(),
+    message: String(req.body.message || '').trim(),
+    source:
+      req.body.source ||
+      (intent === 'call' ? 'contact-call' : intent === 'message' ? 'contact-message' : 'website'),
+  };
+
+  const isAuditLead = payload.source === 'home-audit-banner';
+
+  if (!payload.name) return next(new AppError('Name is required', 400));
+  if (!payload.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
+    return next(new AppError('Valid email is required', 400));
+  }
+  if (!payload.message) return next(new AppError('Message is required', 400));
+  if (!isAuditLead && !payload.service) {
+    return next(new AppError('Please select a service', 400));
+  }
+  if (!isAuditLead && !payload.budget) {
+    return next(new AppError('Please select a budget range', 400));
+  }
+
+  const contact = await Contact.create(payload);
   logger.info(`New contact submission from ${contact.email}`);
 
   try {

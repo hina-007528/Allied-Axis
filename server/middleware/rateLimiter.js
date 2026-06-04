@@ -16,7 +16,7 @@ const authLimiter = rateLimit({
 
 const contactLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
-  max: 5,
+  max: 20,
   message: { success: false, error: 'Too many submissions. Please try again later.' },
 });
 

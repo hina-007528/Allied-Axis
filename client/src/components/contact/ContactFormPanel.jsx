@@ -28,6 +28,34 @@ export default function ContactFormPanel() {
     e.preventDefault();
     setLoading(true);
     setStatus(null);
+
+    const payload = {
+      name: form.name.trim(),
+      email: form.email.trim(),
+      phone: form.phone.trim(),
+      company: form.company.trim(),
+      service: form.service,
+      budget: form.budget,
+      message: form.message.trim(),
+      intent: tab,
+    };
+
+    if (!payload.name || !payload.email || !payload.phone || !payload.company) {
+      setStatus({ type: 'error', msg: 'Please fill in all required fields.' });
+      setLoading(false);
+      return;
+    }
+    if (!payload.service || !payload.budget) {
+      setStatus({ type: 'error', msg: 'Please select a service and budget range.' });
+      setLoading(false);
+      return;
+    }
+    if (!payload.message) {
+      setStatus({ type: 'error', msg: 'Please enter a message before submitting.' });
+      setLoading(false);
+      return;
+    }
+
     try {
       if (!/^https?:\/\//i.test(getApiBase())) {
         setStatus({
@@ -38,7 +66,7 @@ export default function ContactFormPanel() {
         return;
       }
 
-      const data = await contactService.submit({ ...form, intent: tab });
+      const data = await contactService.submit(payload);
       if (data.success) {
         setStatus({
           type: 'success',
@@ -56,10 +84,10 @@ export default function ContactFormPanel() {
       } else {
         setStatus({ type: 'error', msg: data.error || 'Something went wrong. Please try again.' });
       }
-    } catch {
+    } catch (err) {
       setStatus({
         type: 'error',
-        msg: 'Unable to submit. Please email us at info@alliedaxis.digital',
+        msg: err?.message || 'Unable to submit. Please email us at info@alliedaxis.digital',
       });
     }
     setLoading(false);
@@ -181,7 +209,7 @@ export default function ContactFormPanel() {
               required
             >
               {contactServiceOptions.map((opt) => (
-                <option key={opt.value || 'empty'} value={opt.value}>
+                <option key={opt.value || 'empty'} value={opt.value} disabled={!opt.value}>
                   {opt.label}
                 </option>
               ))}
@@ -193,7 +221,7 @@ export default function ContactFormPanel() {
             </label>
             <select id="contact-budget" name="budget" value={form.budget} onChange={onChange} required>
               {contactBudgetOptions.map((opt) => (
-                <option key={opt.value || 'empty-budget'} value={opt.value}>
+                <option key={opt.value || 'empty-budget'} value={opt.value} disabled={!opt.value}>
                   {opt.label}
                 </option>
               ))}
