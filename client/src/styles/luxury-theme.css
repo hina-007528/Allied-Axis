@@ -1,0 +1,165 @@
+/* Motion & polish layer — does NOT override reference light/dark sections */
+
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+.split-mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  line-height: 1.15;
+}
+
+.split-word {
+  display: inline-block;
+  will-change: transform;
+}
+
+.sec-heading,
+.hero h1,
+.hero-title,
+.home-why-title,
+.page-header h1 {
+  overflow: hidden;
+}
+
+.image-reveal {
+  overflow: hidden;
+  transform: translate3d(0, 0, 0);
+  will-change: clip-path;
+}
+
+.image-reveal-inner {
+  transform: translate3d(0, 0, 0) scale(1.3);
+  will-change: transform;
+  transform-origin: center center;
+}
+
+.image-reveal-inner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translate3d(0, 32px, 0);
+  transition: opacity 0.75s cubic-bezier(0.22, 1, 0.36, 1), transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, opacity;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.image-reveal.team-img {
+  width: 100%;
+  border-radius: inherit;
+}
+
+.team-img.image-reveal {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  border: 3px solid var(--border);
+}
+
+.interactive-card,
+.srv-card,
+.testi-card,
+.case-card,
+.blog-card,
+.team-card,
+.why-card,
+.stat-card {
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.4s ease, box-shadow 0.4s ease;
+  transform: translate3d(0, 0, 0);
+}
+
+.interactive-card:hover,
+.srv-card:hover,
+.testi-card:hover,
+.case-card:hover,
+.blog-card:hover,
+.team-card:hover,
+.why-card:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+/* Founder portrait — 3D scene */
+.founder-3d-scene {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  perspective: 1600px;
+  perspective-origin: 50% 50%;
+  overflow: visible;
+}
+
+.founder-3d-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  background: radial-gradient(ellipse 80% 70% at 50% 40%, rgba(224, 92, 38, 0.28), rgba(124, 58, 237, 0.12) 55%, transparent 72%);
+  filter: blur(22px);
+  opacity: 0.85;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.founder-3d-flip {
+  position: relative;
+  z-index: 1;
+  transform-style: preserve-3d;
+  transform-origin: center center;
+  will-change: transform;
+  border-radius: var(--radius-lg);
+}
+
+.founder-3d-face {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--white);
+  box-shadow: var(--shadow-lg);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.founder-3d-face img {
+  display: block;
+  width: 100%;
+  height: auto;
+  vertical-align: top;
+}
+
+.founder-3d-shine {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    125deg,
+    rgba(255, 255, 255, 0.14) 0%,
+    transparent 42%,
+    transparent 58%,
+    rgba(224, 92, 38, 0.06) 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+@media (max-width: 768px) {
+  .founder-3d-scene {
+    max-width: min(100%, 380px);
+    margin: 0 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .founder-3d-glow { opacity: 0.5; }
+  .fade-in { opacity: 1; transform: none; transition: none; }
+}

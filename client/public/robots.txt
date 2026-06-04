@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Sitemap: https://alliedaxis.digital/sitemap.xml
+
+Disallow: /api/

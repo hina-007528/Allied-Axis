@@ -1,0 +1,17 @@
+node_modules/
+client/node_modules/
+server/node_modules/
+client/build/
+logs/
+.env
+client/.env
+client/.env.local
+server/.env
+*.log
+.DS_Store
+coverage/
+.idea/
+.vscode/
+*.mp4
+*.mov
+Website_Allied_Axis_Every_Second_Screenshots/

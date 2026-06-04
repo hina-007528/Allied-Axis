@@ -1,0 +1,77 @@
+import {
+  FaPlane,
+  FaShoppingBag,
+  FaBuilding,
+  FaBriefcase,
+  FaUsers,
+  FaCode,
+  FaGraduationCap,
+  FaHammer,
+  FaTruck,
+} from 'react-icons/fa';
+
+export const aboutIndustries = [
+  {
+    icon: FaPlane,
+    color: '#8b5cf6',
+    bg: 'rgba(139, 92, 246, 0.14)',
+    title: 'Travel & Tourism',
+    desc: 'Hotels, Tour Operators, Hospitality',
+  },
+  {
+    icon: FaShoppingBag,
+    color: '#e05c26',
+    bg: 'rgba(224, 92, 38, 0.14)',
+    title: 'E-commerce & D2C',
+    desc: 'Fashion, Retail & Wholesale',
+  },
+  {
+    icon: FaBuilding,
+    color: '#3b82f6',
+    bg: 'rgba(59, 130, 246, 0.14)',
+    title: 'Real Estate & Property',
+    desc: 'Developers, Brokers, Property Mgmt',
+  },
+  {
+    icon: FaBriefcase,
+    color: '#10b981',
+    bg: 'rgba(16, 185, 129, 0.14)',
+    title: 'Professional Services',
+    desc: 'Legal, Finance, Consulting & Advisory',
+  },
+  {
+    icon: FaUsers,
+    color: '#f59e0b',
+    bg: 'rgba(245, 158, 11, 0.14)',
+    title: 'HR & Recruitment',
+    desc: 'Staffing, Talent Acquisition',
+  },
+  {
+    icon: FaCode,
+    color: '#7c3aed',
+    bg: 'rgba(124, 58, 237, 0.14)',
+    title: 'B2B & SaaS',
+    desc: 'Software, Platforms, Enterprise Tech',
+  },
+  {
+    icon: FaGraduationCap,
+    color: '#ec4899',
+    bg: 'rgba(236, 72, 153, 0.14)',
+    title: 'Education',
+    desc: 'Schools, EdTech, Training Programs',
+  },
+  {
+    icon: FaHammer,
+    color: '#06b6d4',
+    bg: 'rgba(6, 182, 212, 0.14)',
+    title: 'Construction & Contracting',
+    desc: 'Developers, Contractors, Engineering',
+  },
+  {
+    icon: FaTruck,
+    color: '#f97316',
+    bg: 'rgba(249, 115, 22, 0.14)',
+    title: 'Manpower Supply',
+    desc: 'Labour, Staffing & Workforce Solutions',
+  },
+];

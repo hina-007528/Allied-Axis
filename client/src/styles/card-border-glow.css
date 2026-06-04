@@ -1,0 +1,65 @@
+/* Static gray border on SVG; accent segment loops the edge.
+   Orange = card content is only black/white/grey (+ brand orange).
+   Other color = matches the chromatic accent inside the card (set via JS --beam-runner-color). */
+.card-border-beam-host {
+  border-color: transparent !important;
+}
+
+/* In-flow cards only — never override absolute orbit metrics */
+.card-border-beam-host:not(.hero-metric-card) {
+  position: relative;
+}
+
+.card-border-beam {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 10;
+  overflow: visible;
+}
+
+.card-border-beam__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.card-border-beam__track {
+  fill: none;
+  stroke: var(--beam-track-color, rgba(255, 255, 255, 0.08));
+  stroke-width: var(--beam-track-width, 1px);
+  vector-effect: non-scaling-stroke;
+}
+
+.card-border-beam__runner {
+  fill: none;
+  stroke: var(--beam-runner-color, var(--orange));
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 0.07 0.93;
+  stroke-dashoffset: 0;
+  animation: card-border-beam-loop 4s linear infinite;
+  animation-delay: var(--beam-delay, 0s);
+  filter: drop-shadow(0 0 5px var(--beam-runner-glow, rgba(240, 90, 40, 0.75)));
+}
+
+.card-border-beam-host:hover .card-border-beam__runner {
+  stroke: var(--beam-runner-color-hover, var(--beam-runner-color, var(--orange)));
+  filter: drop-shadow(0 0 8px var(--beam-runner-glow, rgba(240, 90, 40, 0.95)));
+}
+
+@keyframes card-border-beam-loop {
+  to {
+    stroke-dashoffset: -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-border-beam__runner {
+    animation: none;
+    stroke-dasharray: 0.07 0.93;
+  }
+}
