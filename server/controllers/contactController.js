@@ -46,7 +46,7 @@ exports.submitContact = asyncHandler(async (req, res, next) => {
       logger.info(`Contact lead email sent for ${contact._id}`);
     } else {
       logger.warn(`Contact email skipped — SMTP not configured (${contact._id})`);
-      emailError = 'SMTP not configured on server';
+      emailError = 'Email not configured — add RESEND_API_KEY on Render';
     }
   } catch (err) {
     emailError = err.message;

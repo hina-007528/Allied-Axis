@@ -24,11 +24,71 @@ function smtpPassword() {
     .replace(/\s/g, '');
 }
 
+function isResendConfigured() {
+  const key = String(process.env.RESEND_API_KEY || '').trim();
+  return key.length > 0 && key.startsWith('re_');
+}
+
 function isSmtpConfigured() {
   const user = String(process.env.SMTP_USER || '').trim();
   const pass = smtpPassword();
   if (!user || !pass) return false;
   if (user === 'your-email@gmail.com' || pass === 'your-app-password') return false;
+  return true;
+}
+
+/** Resend HTTPS API works on Render; Gmail SMTP often times out on free tier. */
+function isEmailConfigured() {
+  return isResendConfigured() || isSmtpConfigured();
+}
+
+function getEmailProvider() {
+  if (isResendConfigured()) return 'resend';
+  if (isSmtpConfigured()) return 'smtp';
+  return 'none';
+}
+
+async function sendViaResend({ to, subject, html, text, replyTo, attachments }) {
+  const key = String(process.env.RESEND_API_KEY || '').trim();
+  const fromName = process.env.FROM_NAME || 'Allied Axis';
+  const from =
+    process.env.RESEND_FROM ||
+    process.env.FROM_EMAIL ||
+    `${fromName} <onboarding@resend.dev>`;
+
+  const payload = {
+    from,
+    to: Array.isArray(to) ? to : [to],
+    subject,
+    html,
+    text,
+  };
+  if (replyTo) payload.reply_to = replyTo;
+  if (attachments?.length) {
+    payload.attachments = attachments.map((file) => ({
+      filename: file.filename,
+      content: Buffer.isBuffer(file.content)
+        ? file.content.toString('base64')
+        : Buffer.from(file.content).toString('base64'),
+    }));
+  }
+
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${key}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const detail = data.message || data.error || JSON.stringify(data);
+    throw new Error(detail || `Resend HTTP ${res.status}`);
+  }
+
+  logger.info(`Resend email sent — id ${data.id}`);
   return true;
 }
 
@@ -61,21 +121,28 @@ async function withSmtpTransport(sendFn) {
   }
 }
 
-/** Call once on server boot — logs whether Gmail SMTP credentials work on Render. */
+/** Call once on server boot — logs email provider status. */
 async function verifySmtpConnection() {
+  const to = process.env.CONTACT_NOTIFY_EMAIL || process.env.SMTP_USER;
+
+  if (isResendConfigured()) {
+    logger.info(`Resend API ready — contact leads will be sent to ${to}`);
+    return true;
+  }
+
   if (!isSmtpConfigured()) {
     logger.warn(
-      'SMTP not configured — set SMTP_USER + SMTP_PASS (Gmail App Password) and CONTACT_NOTIFY_EMAIL on Render'
+      'Email not configured — add RESEND_API_KEY on Render (recommended) or SMTP_USER + SMTP_PASS for local dev'
     );
     return false;
   }
+
   try {
     await withSmtpTransport((transport) => transport.verify());
-    const to = process.env.CONTACT_NOTIFY_EMAIL || process.env.SMTP_USER;
     logger.info(`SMTP ready — contact leads will be sent to ${to}`);
     return true;
   } catch (err) {
-    logger.error(`SMTP verification failed: ${err.message}`);
+    logger.error(`SMTP verification failed: ${err.message} — use RESEND_API_KEY on Render`);
     return false;
   }
 }
@@ -158,26 +225,34 @@ function escapeHtml(str) {
  * @returns {Promise<boolean>} true if sent, false if SMTP skipped
  */
 async function sendContactLeadEmail(contact) {
-  if (!isSmtpConfigured()) {
-    logger.warn('SMTP not configured — contact saved but notification email skipped');
+  if (!isEmailConfigured()) {
+    logger.warn('Email not configured — contact saved but notification email skipped');
     return false;
   }
 
   const lead = toEmailContact(contact);
   const to = String(process.env.CONTACT_NOTIFY_EMAIL || process.env.SMTP_USER || '').trim();
+  const subject = `[Allied Axis] New lead: ${lead.name}${lead.company ? ` — ${lead.company}` : ''}`;
+  const text = formatContactText(lead);
+  const html = formatContactHtml(lead);
+
+  if (isResendConfigured()) {
+    logger.info(`Sending contact lead via Resend to ${to} lead=${lead._id}`);
+    return sendViaResend({ to, subject, html, text, replyTo: lead.email });
+  }
+
   const fromName = process.env.FROM_NAME || 'Allied Axis';
   const fromAddress = String(process.env.SMTP_USER || '').trim();
-
-  logger.info(`Sending contact lead email to ${to} (from ${fromAddress}) lead=${lead._id}`);
+  logger.info(`Sending contact lead via SMTP to ${to} lead=${lead._id}`);
 
   const info = await withSmtpTransport((transport) =>
     transport.sendMail({
       from: `"${fromName}" <${fromAddress}>`,
       to,
       replyTo: lead.email,
-      subject: `[Allied Axis] New lead: ${lead.name}${lead.company ? ` — ${lead.company}` : ''}`,
-      text: formatContactText(lead),
-      html: formatContactHtml(lead),
+      subject,
+      text,
+      html,
     })
   );
 
@@ -221,29 +296,48 @@ function formatTeamApplicationText(application) {
 }
 
 async function sendTeamApplicationEmail(application, file) {
-  if (!isSmtpConfigured()) {
-    logger.warn('SMTP not configured — application saved but notification email skipped');
+  if (!isEmailConfigured()) {
+    logger.warn('Email not configured — application saved but notification email skipped');
     return false;
   }
 
   const to = String(process.env.CONTACT_NOTIFY_EMAIL || process.env.SMTP_USER || '').trim();
+  const subject = `[Allied Axis] Job application: ${application.name}${application.role ? ` — ${application.role}` : ''}`;
+  const text = formatTeamApplicationText(application);
+  const html = formatTeamApplicationHtml(application);
+  const attachment = {
+    filename: file.originalname || application.cvFileName || 'cv.pdf',
+    content: file.buffer,
+  };
+
+  if (isResendConfigured()) {
+    logger.info(`Sending team application via Resend to ${to}`);
+    return sendViaResend({
+      to,
+      subject,
+      html,
+      text,
+      replyTo: application.email,
+      attachments: [attachment],
+    });
+  }
+
   const fromName = process.env.FROM_NAME || 'Allied Axis';
   const fromAddress = String(process.env.SMTP_USER || '').trim();
-
-  logger.info(`Sending team application email to ${to} (from ${fromAddress})`);
+  logger.info(`Sending team application via SMTP to ${to}`);
 
   const info = await withSmtpTransport((transport) =>
     transport.sendMail({
       from: `"${fromName}" <${fromAddress}>`,
       to,
       replyTo: application.email,
-      subject: `[Allied Axis] Job application: ${application.name}${application.role ? ` — ${application.role}` : ''}`,
-      text: formatTeamApplicationText(application),
-      html: formatTeamApplicationHtml(application),
+      subject,
+      text,
+      html,
       attachments: [
         {
-          filename: file.originalname || application.cvFileName || 'cv.pdf',
-          content: file.buffer,
+          filename: attachment.filename,
+          content: attachment.content,
           contentType: file.mimetype || application.cvMimeType,
         },
       ],
@@ -258,5 +352,7 @@ module.exports = {
   sendContactLeadEmail,
   sendTeamApplicationEmail,
   isSmtpConfigured,
+  isEmailConfigured,
+  getEmailProvider,
   verifySmtpConnection,
 };

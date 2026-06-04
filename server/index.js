@@ -55,7 +55,7 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/team', teamRoutes);
 app.use('/api/v1/site', siteRoutes);
 
-const { isSmtpConfigured, verifySmtpConnection } = require('./utils/email');
+const { isEmailConfigured, getEmailProvider, verifySmtpConnection } = require('./utils/email');
 
 app.get('/api/v1/health', (req, res) => {
   res.status(200).json({
@@ -63,7 +63,8 @@ app.get('/api/v1/health', (req, res) => {
     message: 'API is running',
     timestamp: new Date().toISOString(),
     commit: process.env.RENDER_GIT_COMMIT || process.env.VERCEL_GIT_COMMIT_SHA || 'local',
-    smtpConfigured: isSmtpConfigured(),
+    emailProvider: getEmailProvider(),
+    emailConfigured: isEmailConfigured(),
     notifyEmail: process.env.CONTACT_NOTIFY_EMAIL || null,
   });
 });
