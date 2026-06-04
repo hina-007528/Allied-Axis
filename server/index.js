@@ -55,8 +55,17 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/team', teamRoutes);
 app.use('/api/v1/site', siteRoutes);
 
+const { isSmtpConfigured, verifySmtpConnection } = require('./utils/email');
+
 app.get('/api/v1/health', (req, res) => {
-  res.status(200).json({ success: true, message: 'API is running', timestamp: new Date().toISOString() });
+  res.status(200).json({
+    success: true,
+    message: 'API is running',
+    timestamp: new Date().toISOString(),
+    commit: process.env.RENDER_GIT_COMMIT || process.env.VERCEL_GIT_COMMIT_SHA || 'local',
+    smtpConfigured: isSmtpConfigured(),
+    notifyEmail: process.env.CONTACT_NOTIFY_EMAIL || null,
+  });
 });
 
 app.get('/', (req, res) => {
@@ -83,8 +92,6 @@ if (process.env.NODE_ENV === 'production' && shouldServeClient) {
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
-
-const { verifySmtpConnection } = require('./utils/email');
 
 const server = app.listen(PORT, () => {
   logger.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);

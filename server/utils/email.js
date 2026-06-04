@@ -17,40 +17,48 @@ const SERVICE_LABELS = {
   other: 'Other',
 };
 
-let transporter;
-
-function resetTransporter() {
-  transporter = null;
-}
-
 function smtpPassword() {
-  return (process.env.SMTP_PASS || '').replace(/\s/g, '');
+  return String(process.env.SMTP_PASS || '')
+    .trim()
+    .replace(/^["']|["']$/g, '')
+    .replace(/\s/g, '');
 }
 
 function isSmtpConfigured() {
-  const user = process.env.SMTP_USER;
+  const user = String(process.env.SMTP_USER || '').trim();
   const pass = smtpPassword();
   if (!user || !pass) return false;
   if (user === 'your-email@gmail.com' || pass === 'your-app-password') return false;
   return true;
 }
 
-function getTransporter() {
-  if (!transporter) {
-    const port = Number(process.env.SMTP_PORT) || 587;
-    transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST || 'smtp.gmail.com',
-      port,
-      secure: port === 465,
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: smtpPassword(),
-      },
-      connectionTimeout: 15000,
-      greetingTimeout: 15000,
-    });
+/** Fresh transport per send — avoids stale pooled connections on Render. */
+function createSmtpTransporter() {
+  const port = Number(process.env.SMTP_PORT) || 587;
+  return nodemailer.createTransport({
+    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    port,
+    secure: port === 465,
+    requireTLS: port === 587,
+    auth: {
+      user: String(process.env.SMTP_USER || '').trim(),
+      pass: smtpPassword(),
+    },
+    pool: false,
+    connectionTimeout: 20000,
+    greetingTimeout: 20000,
+    socketTimeout: 20000,
+    tls: { minVersion: 'TLSv1.2' },
+  });
+}
+
+async function withSmtpTransport(sendFn) {
+  const transport = createSmtpTransporter();
+  try {
+    return await sendFn(transport);
+  } finally {
+    transport.close();
   }
-  return transporter;
 }
 
 /** Call once on server boot — logs whether Gmail SMTP credentials work on Render. */
@@ -62,7 +70,7 @@ async function verifySmtpConnection() {
     return false;
   }
   try {
-    await getTransporter().verify();
+    await withSmtpTransport((transport) => transport.verify());
     const to = process.env.CONTACT_NOTIFY_EMAIL || process.env.SMTP_USER;
     logger.info(`SMTP ready — contact leads will be sent to ${to}`);
     return true;
@@ -70,6 +78,21 @@ async function verifySmtpConnection() {
     logger.error(`SMTP verification failed: ${err.message}`);
     return false;
   }
+}
+
+function toEmailContact(contact) {
+  const doc = contact?.toObject ? contact.toObject() : contact;
+  return {
+    _id: doc._id,
+    name: doc.name,
+    email: doc.email,
+    phone: doc.phone,
+    company: doc.company,
+    service: doc.service,
+    budget: doc.budget,
+    message: doc.message,
+    createdAt: doc.createdAt,
+  };
 }
 
 function formatContactHtml(contact) {
@@ -92,6 +115,7 @@ function formatContactHtml(contact) {
         <tr><td style="padding: 8px 0; color: #888;">Phone</td><td style="padding: 8px 0;">${escapeHtml(phone)}</td></tr>
         <tr><td style="padding: 8px 0; color: #888;">Company</td><td style="padding: 8px 0;">${escapeHtml(company)}</td></tr>
         <tr><td style="padding: 8px 0; color: #888;">Service</td><td style="padding: 8px 0;">${escapeHtml(service)}</td></tr>
+        <tr><td style="padding: 8px 0; color: #888;">Budget</td><td style="padding: 8px 0;">${escapeHtml(contact.budget || '—')}</td></tr>
         <tr><td style="padding: 8px 0; color: #888; vertical-align: top;">Message</td><td style="padding: 8px 0; white-space: pre-wrap;">${escapeHtml(contact.message)}</td></tr>
         <tr><td style="padding: 8px 0; color: #888;">Submitted</td><td style="padding: 8px 0;">${escapeHtml(submitted)}</td></tr>
       </table>
@@ -112,6 +136,7 @@ function formatContactText(contact) {
     `Phone: ${contact.phone || '—'}`,
     `Company: ${contact.company || '—'}`,
     `Service: ${service}`,
+    `Budget: ${contact.budget || '—'}`,
     '',
     'Message:',
     contact.message,
@@ -138,28 +163,26 @@ async function sendContactLeadEmail(contact) {
     return false;
   }
 
-  const to = process.env.CONTACT_NOTIFY_EMAIL || process.env.SMTP_USER || process.env.FROM_EMAIL;
+  const lead = toEmailContact(contact);
+  const to = String(process.env.CONTACT_NOTIFY_EMAIL || process.env.SMTP_USER || '').trim();
   const fromName = process.env.FROM_NAME || 'Allied Axis';
-  const fromAddress = process.env.SMTP_USER;
+  const fromAddress = String(process.env.SMTP_USER || '').trim();
 
-  logger.info(`Sending contact lead email to ${to} (from ${fromAddress})`);
+  logger.info(`Sending contact lead email to ${to} (from ${fromAddress}) lead=${lead._id}`);
 
-  try {
-    const info = await getTransporter().sendMail({
+  const info = await withSmtpTransport((transport) =>
+    transport.sendMail({
       from: `"${fromName}" <${fromAddress}>`,
       to,
-      replyTo: contact.email,
-      subject: `[Allied Axis] New lead: ${contact.name}${contact.company ? ` — ${contact.company}` : ''}`,
-      text: formatContactText(contact),
-      html: formatContactHtml(contact),
-    });
+      replyTo: lead.email,
+      subject: `[Allied Axis] New lead: ${lead.name}${lead.company ? ` — ${lead.company}` : ''}`,
+      text: formatContactText(lead),
+      html: formatContactHtml(lead),
+    })
+  );
 
-    logger.info(`Contact notification delivered to ${to} — ${info.messageId}`);
-    return true;
-  } catch (err) {
-    resetTransporter();
-    throw err;
-  }
+  logger.info(`Contact notification delivered to ${to} — ${info.messageId}`);
+  return true;
 }
 
 function formatTeamApplicationHtml(application) {
@@ -197,25 +220,20 @@ function formatTeamApplicationText(application) {
   ].join('\n');
 }
 
-/**
- * Notify company inbox when a team application is submitted (CV attached).
- * @param {object} application — mongoose doc
- * @param {Express.Multer.File} file — memory buffer from multer
- */
 async function sendTeamApplicationEmail(application, file) {
   if (!isSmtpConfigured()) {
     logger.warn('SMTP not configured — application saved but notification email skipped');
     return false;
   }
 
-  const to = process.env.CONTACT_NOTIFY_EMAIL || process.env.SMTP_USER || process.env.FROM_EMAIL;
+  const to = String(process.env.CONTACT_NOTIFY_EMAIL || process.env.SMTP_USER || '').trim();
   const fromName = process.env.FROM_NAME || 'Allied Axis';
-  const fromAddress = process.env.SMTP_USER;
+  const fromAddress = String(process.env.SMTP_USER || '').trim();
 
   logger.info(`Sending team application email to ${to} (from ${fromAddress})`);
 
-  try {
-    const info = await getTransporter().sendMail({
+  const info = await withSmtpTransport((transport) =>
+    transport.sendMail({
       from: `"${fromName}" <${fromAddress}>`,
       to,
       replyTo: application.email,
@@ -229,14 +247,11 @@ async function sendTeamApplicationEmail(application, file) {
           contentType: file.mimetype || application.cvMimeType,
         },
       ],
-    });
+    })
+  );
 
-    logger.info(`Team application notification delivered to ${to} — ${info.messageId}`);
-    return true;
-  } catch (err) {
-    resetTransporter();
-    throw err;
-  }
+  logger.info(`Team application notification delivered to ${to} — ${info.messageId}`);
+  return true;
 }
 
 module.exports = {

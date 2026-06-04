@@ -68,10 +68,17 @@ export default function ContactFormPanel() {
 
       const data = await contactService.submit(payload);
       if (data.success) {
+        const emailNote =
+          data.emailSent === false
+            ? ' (Saved, but email alert failed — we will still follow up.)'
+            : '';
         setStatus({
           type: 'success',
-          msg: 'Thank you! We will reach out within 2 hours to schedule your consultation.',
+          msg: `Thank you! We will reach out within 2 hours to schedule your consultation.${emailNote}`,
         });
+        if (data.emailSent === false && data.emailError) {
+          console.warn('Contact email not sent:', data.emailError);
+        }
         setForm({
           name: '',
           email: '',

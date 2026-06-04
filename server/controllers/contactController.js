@@ -37,14 +37,19 @@ exports.submitContact = asyncHandler(async (req, res, next) => {
   const contact = await Contact.create(payload);
   logger.info(`New contact submission from ${contact.email} (${contact._id})`);
 
+  let emailSent = false;
+  let emailError = null;
+
   try {
-    const sent = await sendContactLeadEmail(contact);
-    if (sent) {
+    emailSent = await sendContactLeadEmail(contact);
+    if (emailSent) {
       logger.info(`Contact lead email sent for ${contact._id}`);
     } else {
       logger.warn(`Contact email skipped — SMTP not configured (${contact._id})`);
+      emailError = 'SMTP not configured on server';
     }
   } catch (err) {
+    emailError = err.message;
     logger.error(`Contact notification email failed for ${contact._id}: ${err.message}`, {
       code: err.code,
       response: err.response,
@@ -55,6 +60,8 @@ exports.submitContact = asyncHandler(async (req, res, next) => {
     success: true,
     message: 'Thank you for reaching out. We will get back to you within 24 hours.',
     data: { id: contact._id },
+    emailSent,
+    ...(emailError ? { emailError } : {}),
   });
 });
 
