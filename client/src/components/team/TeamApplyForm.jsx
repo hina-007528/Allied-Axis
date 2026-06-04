@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react';
 import { FaUpload } from 'react-icons/fa';
-
-const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/v1';
+import { getApiBase } from '../../utils/apiBase';
 
 export default function TeamApplyForm() {
   const fileRef = useRef(null);
@@ -50,7 +49,7 @@ export default function TeamApplyForm() {
     body.append('cv', cvFile);
 
     try {
-      const res = await fetch(`${API_BASE}/team/apply`, {
+      const res = await fetch(`${getApiBase()}/team/apply`, {
         method: 'POST',
         body,
       });

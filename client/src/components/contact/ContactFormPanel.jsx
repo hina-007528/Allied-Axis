@@ -5,8 +5,8 @@ import {
   contactServiceOptions,
   contactBudgetOptions,
 } from '../../data/contactPageContent';
-
-const API_BASE = process.env.REACT_APP_API_URL || 'http://localhost:5000/api/v1';
+import { contactService } from '../../services/api';
+import { getApiBase } from '../../utils/apiBase';
 
 export default function ContactFormPanel() {
   const [tab, setTab] = useState('message');
@@ -29,12 +29,16 @@ export default function ContactFormPanel() {
     setLoading(true);
     setStatus(null);
     try {
-      const res = await fetch(`${API_BASE}/contact`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, intent: tab }),
-      });
-      const data = await res.json();
+      if (!/^https?:\/\//i.test(getApiBase())) {
+        setStatus({
+          type: 'error',
+          msg: 'Site configuration error: API URL is missing. Please email info@alliedaxis.digital',
+        });
+        setLoading(false);
+        return;
+      }
+
+      const data = await contactService.submit({ ...form, intent: tab });
       if (data.success) {
         setStatus({
           type: 'success',
