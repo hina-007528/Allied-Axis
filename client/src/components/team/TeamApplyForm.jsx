@@ -49,11 +49,35 @@ export default function TeamApplyForm() {
     body.append('cv', cvFile);
 
     try {
+      if (!/^https?:\/\//i.test(getApiBase())) {
+        setStatus({
+          type: 'error',
+          msg: 'Site configuration error. Please email info@alliedaxis.digital',
+        });
+        setLoading(false);
+        return;
+      }
+
       const res = await fetch(`${getApiBase()}/team/apply`, {
         method: 'POST',
         body,
       });
-      const data = await res.json();
+
+      let data = {};
+      try {
+        data = await res.json();
+      } catch {
+        data = {};
+      }
+
+      if (!res.ok) {
+        setStatus({
+          type: 'error',
+          msg: data.error || `Unable to submit (${res.status}). Please try again.`,
+        });
+        setLoading(false);
+        return;
+      }
 
       if (data.success) {
         setStatus({
@@ -71,10 +95,10 @@ export default function TeamApplyForm() {
           msg: data.error || 'Something went wrong. Please try again.',
         });
       }
-    } catch {
+    } catch (err) {
       setStatus({
         type: 'error',
-        msg: 'Unable to submit. Please try again or email info@alliedaxis.digital',
+        msg: err?.message || 'Unable to submit. Please try again or email info@alliedaxis.digital',
       });
     }
 

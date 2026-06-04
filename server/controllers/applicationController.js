@@ -27,16 +27,23 @@ exports.submitTeamApplication = asyncHandler(async (req, res) => {
 
   logger.info(`New team application from ${application.email} (${application._id})`);
 
-  try {
-    const sent = await sendTeamApplicationEmail(application, req.file);
-    if (sent) logger.info(`Team application email sent for ${application._id}`);
-  } catch (err) {
-    logger.error(`Team application email failed for ${application._id}: ${err.message}`);
-  }
+  const fileSnapshot = {
+    originalname: req.file.originalname,
+    mimetype: req.file.mimetype,
+    buffer: Buffer.from(req.file.buffer),
+  };
 
   res.status(201).json({
     success: true,
     message: 'Thank you! Your application was received. We will review it and get back to you soon.',
     data: { id: application._id },
   });
+
+  sendTeamApplicationEmail(application, fileSnapshot)
+    .then((sent) => {
+      if (sent) logger.info(`Team application email sent for ${application._id}`);
+    })
+    .catch((err) => {
+      logger.error(`Team application email failed for ${application._id}: ${err.message}`);
+    });
 });

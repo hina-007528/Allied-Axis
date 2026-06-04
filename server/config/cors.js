@@ -36,13 +36,16 @@ function corsOptions() {
   return {
     origin(origin, callback) {
       if (isOriginAllowed(origin)) {
-        callback(null, true);
+        callback(null, origin || true);
       } else {
-        callback(new Error(`CORS blocked origin: ${origin}`));
+        callback(null, false);
       }
     },
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    optionsSuccessStatus: 204,
+    maxAge: 86400,
   };
 }
 

@@ -18,8 +18,21 @@ const upload = multer({
       cb(null, true);
       return;
     }
-    cb(new AppError('CV must be a PDF, DOC, or DOCX file.', 400));
+    cb(new Error('CV must be a PDF, DOC, or DOCX file.'));
   },
 });
 
-module.exports = upload.single('cv');
+const uploadSingle = upload.single('cv');
+
+module.exports = (req, res, next) => {
+  uploadSingle(req, res, (err) => {
+    if (!err) return next();
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return next(new AppError('CV must be 5 MB or smaller.', 400));
+    }
+    if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+      return next(new AppError('Invalid upload. Please attach one CV file only.', 400));
+    }
+    return next(new AppError(err.message || 'CV upload failed.', 400));
+  });
+};

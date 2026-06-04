@@ -31,8 +31,16 @@ connectDB();
 app.use(helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }));
 app.use(cors(corsOptions()));
 app.use(compression());
-app.use(express.json({ limit: '10kb' }));
-app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+const jsonParser = express.json({ limit: '10kb' });
+const urlencodedParser = express.urlencoded({ extended: true, limit: '10kb' });
+
+app.use((req, res, next) => {
+  if (req.is('multipart/form-data')) return next();
+  jsonParser(req, res, (err) => {
+    if (err) return next(err);
+    urlencodedParser(req, res, next);
+  });
+});
 app.use(mongoSanitize());
 app.use(hpp());
 
