@@ -35,25 +35,27 @@ exports.submitContact = asyncHandler(async (req, res, next) => {
   }
 
   const contact = await Contact.create(payload);
-  logger.info(`New contact submission from ${contact.email}`);
+  logger.info(`New contact submission from ${contact.email} (${contact._id})`);
+
+  try {
+    const sent = await sendContactLeadEmail(contact);
+    if (sent) {
+      logger.info(`Contact lead email sent for ${contact._id}`);
+    } else {
+      logger.warn(`Contact email skipped — SMTP not configured (${contact._id})`);
+    }
+  } catch (err) {
+    logger.error(`Contact notification email failed for ${contact._id}: ${err.message}`, {
+      code: err.code,
+      response: err.response,
+    });
+  }
 
   res.status(201).json({
     success: true,
     message: 'Thank you for reaching out. We will get back to you within 24 hours.',
     data: { id: contact._id },
   });
-
-  // Respond before SMTP — avoids client timeout on Render free tier / slow mail
-  sendContactLeadEmail(contact)
-    .then((sent) => {
-      if (sent) logger.info(`Contact lead email sent for ${contact._id}`);
-    })
-    .catch((err) => {
-      logger.error(`Contact notification email failed: ${err.message}`, {
-        code: err.code,
-        response: err.response,
-      });
-    });
 });
 
 exports.getContacts = asyncHandler(async (req, res) => {

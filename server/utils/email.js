@@ -19,6 +19,10 @@ const SERVICE_LABELS = {
 
 let transporter;
 
+function resetTransporter() {
+  transporter = null;
+}
+
 function smtpPassword() {
   return (process.env.SMTP_PASS || '').replace(/\s/g, '');
 }
@@ -140,17 +144,22 @@ async function sendContactLeadEmail(contact) {
 
   logger.info(`Sending contact lead email to ${to} (from ${fromAddress})`);
 
-  const info = await getTransporter().sendMail({
-    from: `"${fromName}" <${fromAddress}>`,
-    to,
-    replyTo: contact.email,
-    subject: `[Allied Axis] New lead: ${contact.name}${contact.company ? ` — ${contact.company}` : ''}`,
-    text: formatContactText(contact),
-    html: formatContactHtml(contact),
-  });
+  try {
+    const info = await getTransporter().sendMail({
+      from: `"${fromName}" <${fromAddress}>`,
+      to,
+      replyTo: contact.email,
+      subject: `[Allied Axis] New lead: ${contact.name}${contact.company ? ` — ${contact.company}` : ''}`,
+      text: formatContactText(contact),
+      html: formatContactHtml(contact),
+    });
 
-  logger.info(`Contact notification delivered to ${to} — ${info.messageId}`);
-  return true;
+    logger.info(`Contact notification delivered to ${to} — ${info.messageId}`);
+    return true;
+  } catch (err) {
+    resetTransporter();
+    throw err;
+  }
 }
 
 function formatTeamApplicationHtml(application) {
@@ -205,24 +214,29 @@ async function sendTeamApplicationEmail(application, file) {
 
   logger.info(`Sending team application email to ${to} (from ${fromAddress})`);
 
-  const info = await getTransporter().sendMail({
-    from: `"${fromName}" <${fromAddress}>`,
-    to,
-    replyTo: application.email,
-    subject: `[Allied Axis] Job application: ${application.name}${application.role ? ` — ${application.role}` : ''}`,
-    text: formatTeamApplicationText(application),
-    html: formatTeamApplicationHtml(application),
-    attachments: [
-      {
-        filename: file.originalname || application.cvFileName || 'cv.pdf',
-        content: file.buffer,
-        contentType: file.mimetype || application.cvMimeType,
-      },
-    ],
-  });
+  try {
+    const info = await getTransporter().sendMail({
+      from: `"${fromName}" <${fromAddress}>`,
+      to,
+      replyTo: application.email,
+      subject: `[Allied Axis] Job application: ${application.name}${application.role ? ` — ${application.role}` : ''}`,
+      text: formatTeamApplicationText(application),
+      html: formatTeamApplicationHtml(application),
+      attachments: [
+        {
+          filename: file.originalname || application.cvFileName || 'cv.pdf',
+          content: file.buffer,
+          contentType: file.mimetype || application.cvMimeType,
+        },
+      ],
+    });
 
-  logger.info(`Team application notification delivered to ${to} — ${info.messageId}`);
-  return true;
+    logger.info(`Team application notification delivered to ${to} — ${info.messageId}`);
+    return true;
+  } catch (err) {
+    resetTransporter();
+    throw err;
+  }
 }
 
 module.exports = {
