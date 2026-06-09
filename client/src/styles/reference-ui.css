@@ -9321,53 +9321,6 @@ body {
   padding: 32px 36px 28px;
 }
 
-.testi-ref-visual {
-  position: relative;
-  height: 112px;
-  margin: -32px -36px 20px;
-  overflow: hidden;
-}
-
-.testi-ref-visual-img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s ease;
-}
-
-.testi-ref-card:hover .testi-ref-visual-img {
-  transform: scale(1.04);
-}
-
-.testi-ref-visual-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(15, 23, 42, 0.08) 0%,
-    color-mix(in srgb, var(--testi-accent, #7c3aed) 38%, rgba(15, 23, 42, 0.55)) 100%
-  );
-  pointer-events: none;
-}
-
-.testi-ref-visual-badge {
-  position: absolute;
-  bottom: 10px;
-  left: 14px;
-  max-width: calc(100% - 28px);
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #fff;
-  background: rgba(15, 23, 42, 0.62);
-  backdrop-filter: blur(6px);
-  line-height: 1.3;
-}
-
 .testi-ref-side {
   background: linear-gradient(
     165deg,
@@ -9446,10 +9399,6 @@ body {
 
 .testi-ref-card--featured .testi-ref-main {
   padding: 36px 40px 32px;
-}
-
-.testi-ref-card--featured .testi-ref-visual {
-  margin: -36px -40px 20px;
 }
 
 .testi-ref-metric-badge {
@@ -9649,11 +9598,6 @@ body {
 
   .testi-ref-main {
     padding: 28px 22px 24px;
-  }
-
-  .testi-ref-visual {
-    margin: -28px -22px 16px;
-    height: 96px;
   }
 
   .testi-ref-stars {

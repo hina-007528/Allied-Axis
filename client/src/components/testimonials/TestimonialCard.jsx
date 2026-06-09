@@ -1,8 +1,6 @@
 import useInView from '../../hooks/useInView';
 import {
   getTestimonialAvatar,
-  getTestimonialDisplayName,
-  getTestimonialImage,
   TESTIMONIAL_THEME_COLORS,
 } from '../../data/testimonials';
 import TestimonialAnimatedMetric from './TestimonialAnimatedMetric';
@@ -13,6 +11,8 @@ export default function TestimonialCard({ testimonial, variant = 'grid' }) {
   const [ref, inView] = useInView(0.12);
   const {
     quote,
+    author,
+    role,
     company,
     location,
     countryCode,
@@ -24,8 +24,7 @@ export default function TestimonialCard({ testimonial, variant = 'grid' }) {
   const place = [location, countryCode].filter(Boolean).join(' ');
   const roleLine = [company, place, FLAGS[countryCode]].filter(Boolean).join(' · ');
   const avatarSrc = getTestimonialAvatar(testimonial);
-  const contextImage = getTestimonialImage(testimonial);
-  const displayName = getTestimonialDisplayName(testimonial);
+  const nameLine = role || author || 'Client';
 
   return (
     <article
@@ -35,19 +34,6 @@ export default function TestimonialCard({ testimonial, variant = 'grid' }) {
     >
       <span className="testi-ref-topline" aria-hidden="true" />
       <div className="testi-ref-main">
-        {contextImage && (
-          <div className="testi-ref-visual">
-            <img
-              className="testi-ref-visual-img"
-              src={contextImage}
-              alt=""
-              loading="lazy"
-              decoding="async"
-            />
-            <div className="testi-ref-visual-overlay" aria-hidden="true" />
-            {company && <span className="testi-ref-visual-badge">{company}</span>}
-          </div>
-        )}
         <span className="testi-ref-quote-mark" aria-hidden="true">
           &ldquo;
         </span>
@@ -56,14 +42,14 @@ export default function TestimonialCard({ testimonial, variant = 'grid' }) {
           <img
             className="testi-ref-avatar"
             src={avatarSrc}
-            alt={displayName}
+            alt={nameLine}
             width={44}
             height={44}
             loading="lazy"
             decoding="async"
           />
           <div className="testi-ref-meta">
-            <span className="testi-ref-name">{displayName}</span>
+            <span className="testi-ref-name">{nameLine}</span>
             <span className="testi-ref-role">{roleLine}</span>
           </div>
           <div className="testi-ref-stars" aria-label="5 out of 5 stars">
