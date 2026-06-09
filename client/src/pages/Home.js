@@ -151,9 +151,9 @@ export default function Home() {
                 Where Strategy Meets Scalable Growth
               </div>
               <h1 className="hero-title">
-                <span className="hero-title-line hero-title-white">Struggling to get leads?</span>
-                <span className="hero-title-line hero-title-accent">Brand invisible online?</span>
-                <span className="hero-title-line hero-title-white">Wasting money on ads?</span>
+                <span className="hero-title-line hero-title-white">We Build</span>
+                <span className="hero-title-line hero-title-accent">AI-Powered Revenue</span>
+                <span className="hero-title-line hero-title-white">Systems for Scratch</span>
               </h1>
               <p className="hero-sub">
                 We build AI-Powered digital systems that convert qualified leads and turn your brand
