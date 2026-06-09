@@ -13,11 +13,35 @@ function iconNamesToStrings(code) {
   return code.replace(/\b(Fa[A-Z][a-zA-Z0-9]*)\b/g, "'$1'");
 }
 
+function stripExportedFunctions(code) {
+  const marker = 'export function ';
+  let result = code;
+  while (result.includes(marker)) {
+    const start = result.indexOf(marker);
+    const braceStart = result.indexOf('{', start);
+    if (braceStart === -1) break;
+
+    let depth = 0;
+    let end = braceStart;
+    for (let i = braceStart; i < result.length; i += 1) {
+      if (result[i] === '{') depth += 1;
+      if (result[i] === '}') {
+        depth -= 1;
+        if (depth === 0) {
+          end = i + 1;
+          break;
+        }
+      }
+    }
+    result = result.slice(0, start) + result.slice(end);
+  }
+  return result;
+}
+
 function toCommonJS(code) {
-  return code
+  return stripExportedFunctions(code)
     .replace(/export default /g, 'module.exports = ')
-    .replace(/export const /g, 'exports.')
-    .replace(/export function \w+\([^)]*\)\s*\{[^}]*\}\s*/g, '');
+    .replace(/export const /g, 'exports.');
 }
 
 /** Load a client/src/data/*.js file (strips imports, serializes react-icons). */
