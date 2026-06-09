@@ -15,9 +15,9 @@ import {
   FaHandshake,
   FaMap,
   FaImages,
-  FaCamera,
-  FaPrint,
-  FaFilm,
+  FaMicrophone,
+  FaThLarge,
+  FaFile,
   FaCheck,
 } from 'react-icons/fa';
 
@@ -37,9 +37,9 @@ const iconMap = {
   handshake: FaHandshake,
   map: FaMap,
   images: FaImages,
-  camera: FaCamera,
-  print: FaPrint,
-  film: FaFilm,
+  microphone: FaMicrophone,
+  layout: FaThLarge,
+  document: FaFile,
 };
 
 export default function ServiceIndividualCard({ service }) {
@@ -50,11 +50,14 @@ export default function ServiceIndividualCard({ service }) {
       className="srv-individual-card interactive-card"
       style={{ '--srv-ind-accent': service.accent }}
     >
-      <div
-        className="srv-individual-icon"
-        style={{ background: `${service.accent}18`, color: service.accent }}
-      >
-        <Icon aria-hidden="true" />
+      <div className="srv-individual-icon">
+        {service.emoji ? (
+          <span className="srv-individual-emoji" aria-hidden="true">
+            {service.emoji}
+          </span>
+        ) : (
+          <Icon aria-hidden="true" style={{ color: service.accent }} />
+        )}
       </div>
       <h3 className="srv-individual-title">{service.title}</h3>
       <p className="srv-individual-problem">&ldquo;{service.problem}&rdquo;</p>

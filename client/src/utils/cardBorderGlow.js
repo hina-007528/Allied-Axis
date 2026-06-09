@@ -42,6 +42,7 @@ const CARD_SELECTOR = [
   '.about-engagement-stat',
   '.srv-catalog-card',
   '.srv-individual-card',
+  '.srv-production-card',
   '.portfolio-spotlight',
   '.portfolio-case-card',
   '.home-proof-card',
@@ -59,6 +60,7 @@ const ACCENT_CSS_VARS = [
   '--proof-accent',
   '--testi-accent',
   '--srv-accent',
+  '--srv-prod-accent',
   '--case-accent',
 ];
 

@@ -1,15 +1,12 @@
-/** Home testimonials — reference layout (left-aligned, photo avatars) */
-const AVATAR_IMAGES = [
-  'https://i.pravatar.cc/96?img=32',
-  'https://i.pravatar.cc/96?img=47',
-  'https://i.pravatar.cc/96?img=12',
-];
+import { getTestimonialAvatar, getTestimonialDisplayName } from '../../data/testimonials';
 
+/** Home testimonials — reference layout (left-aligned, photo avatars) */
 export default function HomeTestimonialCard({ testimonial, featured = false, index = 0 }) {
-  const { quote, author, company, location, countryCode } = testimonial;
+  const { quote, company, location, countryCode } = testimonial;
   const place = [location, countryCode].filter(Boolean).join(' ');
   const locationLine = [company, place].filter(Boolean).join(' · ');
-  const avatarSrc = AVATAR_IMAGES[index % AVATAR_IMAGES.length];
+  const avatarSrc = getTestimonialAvatar(testimonial);
+  const displayName = getTestimonialDisplayName(testimonial);
 
   return (
     <article
@@ -27,14 +24,14 @@ export default function HomeTestimonialCard({ testimonial, featured = false, ind
         <img
           className="home-testi-avatar"
           src={avatarSrc}
-          alt=""
+          alt={displayName}
           width={44}
           height={44}
           loading="lazy"
           decoding="async"
         />
         <div className="home-testi-meta">
-          <span className="home-testi-name">{author}</span>
+          <span className="home-testi-name">{displayName}</span>
           <span className="home-testi-role">{locationLine}</span>
         </div>
       </div>

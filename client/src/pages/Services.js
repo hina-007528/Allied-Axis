@@ -12,8 +12,6 @@ import ServicesImportantNotesSection from '../components/services/ServicesImport
 import ServicesClosingCta from '../components/services/ServicesClosingCta';
 import { launchPackages } from '../data/services';
 
-const colors = ['#7c3aed', '#e05c26', '#10b981', '#f59e0b', '#3b82f6', '#8b5cf6'];
-
 function FadeSection({ children }) {
   const [ref, visible] = useInView(0.08);
   return <div ref={ref} className={`fade-in ${visible ? 'visible' : ''}`}>{children}</div>;
@@ -39,23 +37,26 @@ export default function Services() {
             </h2>
           </header>
           <div className="packages-grid">
-            {launchPackages.map((pkg, i) => (
-              <FadeSection key={i}>
-                <div className="package-card interactive-card">
-                  <h3 style={{ fontSize: 20, marginBottom: 4 }}>{pkg.name}</h3>
+            {launchPackages.map((pkg) => (
+              <FadeSection key={pkg.name}>
+                <div
+                  className="package-card interactive-card"
+                  style={{ '--pkg-accent': pkg.accent }}
+                >
+                  <h3 className="package-card-title">{pkg.name}</h3>
                   {pkg.description && (
-                    <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 16 }}>{pkg.description}</p>
+                    <p className="package-card-desc">{pkg.description}</p>
                   )}
                   <ul className="package-list">
-                    {pkg.items.map((item, ii) => (
-                      <li key={ii}>
-                        <FaCheck className="srv-check" style={{ color: '#10b981' }} aria-hidden />
+                    {pkg.items.map((item) => (
+                      <li key={item}>
+                        <FaCheck className="package-check" aria-hidden />
                         {item}
                       </li>
                     ))}
                   </ul>
-                  <Link to="/contact" className="srv-inquire" style={{ color: colors[i % colors.length], marginTop: 16 }}>
-                    Inquire Now →
+                  <Link to="/contact" className="package-get-started">
+                    Get Started
                   </Link>
                 </div>
               </FadeSection>

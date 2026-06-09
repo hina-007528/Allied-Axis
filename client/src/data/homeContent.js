@@ -11,6 +11,9 @@ import {
   FaMap,
   FaRocket,
   FaChartBar,
+  FaChartLine,
+  FaShieldAlt,
+  FaUsers,
 } from 'react-icons/fa';
 
 /** Why Allied Axis — reference video copy */
@@ -24,6 +27,7 @@ export const whyItems = [
     desc: 'We don\'t sell isolated deliverables. We build integrated growth ecosystems — scalable assets that improve over time.',
     bg: 'rgba(124,58,237,0.15)',
     color: '#7c3aed',
+    graph: 'ecosystem',
   },
   {
     icon: FaMicrochip,
@@ -31,6 +35,7 @@ export const whyItems = [
     desc: 'Not just traditional marketing — we build AI-driven workflows that compound results over time.',
     bg: 'rgba(240,90,40,0.15)',
     color: '#f05a28',
+    graph: 'compound',
   },
   {
     icon: FaLayerGroup,
@@ -38,6 +43,7 @@ export const whyItems = [
     desc: 'By choosing us you replace an entire team. We provide a complete digital ecosystem under one roof.',
     bg: 'rgba(16,185,129,0.15)',
     color: '#10b981',
+    graph: 'stacked',
   },
   {
     icon: FaCompass,
@@ -45,6 +51,41 @@ export const whyItems = [
     desc: 'Operating across UAE, UK & Pakistan — proven results in diverse and competitive global markets.',
     bg: 'rgba(245,158,11,0.15)',
     color: '#f59e0b',
+    graph: 'markets',
+  },
+];
+
+/** Why section — trust strip + bottom pillars (reference layout) */
+export const whyTrustBrands = ['TechNova', 'PeakFlow', 'GrowthLab', 'Nexora', 'VisionX'];
+
+export const whyFeaturePillars = [
+  {
+    icon: FaRocket,
+    title: 'Data-Backed Strategy',
+    sub: 'Evidence-led growth plans',
+    color: '#8b5cf6',
+    bg: 'rgba(139, 92, 246, 0.15)',
+  },
+  {
+    icon: FaChartLine,
+    title: 'Performance Focused',
+    sub: 'ROI at every step',
+    color: '#f05a28',
+    bg: 'rgba(240, 90, 40, 0.15)',
+  },
+  {
+    icon: FaShieldAlt,
+    title: 'Transparent Reporting',
+    sub: 'Clear metrics, no guesswork',
+    color: '#10b981',
+    bg: 'rgba(16, 185, 129, 0.15)',
+  },
+  {
+    icon: FaUsers,
+    title: 'One Team, One Goal',
+    sub: 'One dashboard, one team',
+    color: '#3b82f6',
+    bg: 'rgba(59, 130, 246, 0.15)',
   },
 ];
 

@@ -64,12 +64,14 @@ function toTestimonialDoc(t, index) {
     legacyId: t.id,
     quote: t.quote,
     author: t.author,
-    role: t.role || t.author,
+    role: t.role || t.author || 'Client',
     company: t.company,
     location: t.location,
     countryCode: t.countryCode,
     rating: t.rating ?? 5,
     metric: t.metric,
+    avatar: t.avatar,
+    image: t.image,
     theme: t.theme,
     avatarIndex: t.avatarIndex ?? index,
     featured: t.featured ?? false,
@@ -109,23 +111,20 @@ const seedDB = async () => {
     const pageEntries = buildPageContentEntries();
 
     const staticFaqs = [
-      { q: 'How do you start a new project?', a: 'Every engagement begins with a free 30-minute diagnostic conversation. We assess your current infrastructure, identify gaps, and propose a custom roadmap — no pitch, no pressure.', order: 1 },
-      { q: 'Can you work with small businesses?', a: 'Yes. Our launch packages are designed for growth-stage businesses. The investment scales — a boutique firm can build a lean version focused on the highest-impact elements.', order: 2 },
-      { q: 'Will I be involved in the process?', a: 'Absolutely. We maintain weekly reporting and direct access to the team. Strategy decisions are collaborative; execution is handled by us.', order: 3 },
-      { q: 'How do you measure campaign success?', a: 'We track leads, cost per lead, conversion rates, and ROI. You get a monthly dashboard with complete transparency. No vanity metrics.', order: 4 },
-      { q: 'Are there any hidden fees?', a: 'No. Domain registration, hosting, and ad spend are separate costs clearly outlined upfront. Third-party tool costs are specified before engagement.', order: 5 },
-      { q: 'How long does a project take?', a: 'Essential launches: 2-4 weeks. Complete systems: 6-10 weeks. Ongoing optimisation is continuous. We move fast without cutting corners.', order: 6 },
+      { q: 'How do you start a new project?', a: 'We begin with a free discovery call to understand your business goals, target audience, and challenges. Then we craft a tailored strategy before any work begins.', order: 1 },
+      { q: 'Can you work with small businesses?', a: 'Absolutely. We work with startups, SMEs, and enterprises across UAE, UK, and Pakistan. Every package is designed to deliver ROI regardless of business size.', order: 2 },
+      { q: 'Will I be involved in the process?', a: "Yes — we involve you at every key milestone. You approve strategy, design, and copy before we proceed. You're always in control.", order: 3 },
+      { q: 'How do you measure campaign success?', a: 'We track leads, cost per lead, conversion rates, and ROI. You get a monthly dashboard with complete transparency.', order: 4 },
+      { q: 'Are there any hidden fees?', a: 'Zero. Pricing is 100% transparent. Full asset ownership is always included — no retainers, no lock-ins.', order: 5 },
+      { q: 'How long does a project take?', a: 'Most projects go live in 2–4 weeks. Complex ecosystems with AI automation can take 6–8 weeks depending on scope.', order: 6 },
     ];
 
-    const staticLogos = [
-      { name: 'Affra Afzal Tourism', src: '/images/clients/affra-afzal-tourism.svg', order: 1 },
-      { name: 'Human Consultancy', src: '/images/clients/human-consultancy.svg', order: 2 },
-      { name: 'My Choice Tourism', src: '/images/clients/my-choice-tourism.svg', order: 3 },
-      { name: 'High Way Travel', src: '/images/clients/high-way-travel.svg', order: 4 },
-      { name: 'Arabia Horizons', src: '/images/clients/arabia-horizons.svg', order: 5 },
-      { name: 'DMB', src: '/images/clients/dmb.svg', order: 6 },
-      { name: 'Moon Star', src: '/images/clients/moon-star.svg', order: 7 },
-    ];
+    const clientLogosData = loadNamedModule('clientLogos.js');
+    const staticLogos = (clientLogosData.CLIENT_LOGOS || []).map(({ name, src, order }) => ({
+      name,
+      src,
+      order,
+    }));
 
     await Promise.all([
       User.deleteMany({}),

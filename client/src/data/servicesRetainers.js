@@ -7,6 +7,21 @@ export const servicesRetainersIntro = {
 
 export const servicesRetainersRows = [
   {
+    service: 'Search & Growth Intelligence',
+    included:
+      'Keyword strategy, on-page SEO, backlink tracking, technical audits, monthly report',
+  },
+  {
+    service: 'Social Media Management',
+    included:
+      'Daily posting, engagement, reels, community management, monthly analytics',
+  },
+  {
+    service: 'Performance Marketing Systems',
+    included:
+      'Meta, Google, LinkedIn & TikTok — ad creative, retargeting, A/B testing, ROAS reporting',
+  },
+  {
     service: 'Authority Content Systems',
     included:
       'SEO blog posts, website copy, case studies, content distribution, strategy',

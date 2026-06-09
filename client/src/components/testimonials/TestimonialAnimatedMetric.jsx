@@ -18,6 +18,15 @@ export default function TestimonialAnimatedMetric({
     );
   }
 
+  if (variant === 'sidebar') {
+    return (
+      <div className="testi-ref-side-metric" style={{ '--testi-accent': accent }}>
+        <span className="testi-ref-side-metric-val" aria-live="polite">{display}</span>
+        <span className="testi-ref-side-metric-lbl">{label}</span>
+      </div>
+    );
+  }
+
   return (
     <div className="testi-ref-metric-head" style={{ '--testi-accent': accent }}>
       <span className="testi-ref-metric-value" aria-live="polite">

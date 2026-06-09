@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { servicesProduction, servicesProductionIntro } from '../../data/servicesProduction';
 import useInView from '../../hooks/useInView';
 import { initCardBorderGlow } from '../../utils/cardBorderGlow';
-import ServiceIndividualCard from './ServiceIndividualCard';
+import ServiceProductionCard from './ServiceProductionCard';
 
 function FadeSection({ children }) {
   const [ref, visible] = useInView(0.06);
@@ -38,7 +38,7 @@ export default function ServicesProductionSection() {
         <div className="services-production-grid">
           {servicesProduction.map((service) => (
             <FadeSection key={service.slug}>
-              <ServiceIndividualCard service={service} />
+              <ServiceProductionCard service={service} />
             </FadeSection>
           ))}
         </div>

@@ -60,7 +60,7 @@ export default function Portfolio() {
           )}
           <div className="portfolio-case-grid">
             {rest.map((cs, i) => (
-              <FadeSection key={cs.slug}>
+              <FadeSection key={cs.slug} className="portfolio-case-grid-item">
                 <PortfolioCaseCard cs={cs} index={i + 1} />
               </FadeSection>
             ))}

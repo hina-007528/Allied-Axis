@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom';
 import { FaEnvelope, FaLinkedinIn } from 'react-icons/fa';
-import { founderCertifications } from '../../data/aboutFounder';
+import { usePageContent } from '../../context/SiteDataContext';
 import { publicImageSrc } from '../../utils/publicImageSrc';
 
 export default function TeamLeadershipCard({ leader }) {
+  const { content: founder } = usePageContent('about-founder');
+  const founderCertifications = founder?.founderCertifications ?? [];
   const reverse = !leader.imageFirst;
 
   return (
@@ -12,7 +14,7 @@ export default function TeamLeadershipCard({ leader }) {
     >
       <div className="team-lead-media">
         <div className="team-lead-photo-wrap">
-          <img src={publicImageSrc(leader.image)} alt={leader.name} loading="lazy" decoding="async" />
+          <img src={publicImageSrc(leader.image)} alt={leader.name} loading="lazy" />
         </div>
         <div className="team-lead-badge-bar">
           <span className="team-lead-badge-pill">{leader.role}</span>

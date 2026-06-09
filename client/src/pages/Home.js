@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { FaPalette, FaBrain, FaGlobe, FaRocket, FaGlobeAmericas, FaShieldAlt } from 'react-icons/fa';
 import HomeProofCard from '../components/home/HomeProofCard';
 import HomeTestimonialCard from '../components/home/HomeTestimonialCard';
+import HomeWhySection from '../components/home/HomeWhySection';
+import { whyTrustBrands, whyFeaturePillars } from '../data/homeContent';
 import WebsiteAuditBanner from '../components/home/WebsiteAuditBanner';
 import ClientLogos from '../components/home/ClientLogos';
 import StatsBar from '../components/common/StatsBar';
@@ -76,17 +78,20 @@ function ProcessSteps({ steps }) {
 }
 
 function FAQ({ faqs }) {
-  const [openIdx, setOpenIdx] = useState(-1);
+  const [openIdx, setOpenIdx] = useState(0);
   if (!faqs?.length) return null;
   return (
     <section className="section section-dark">
       <div className="container">
         <div className="faq-layout">
-          <div>
+          <div className="faq-aside">
             <span className="sec-label">FAQ</span>
-            <h2 className="sec-heading" style={{ color: '#fff' }}>Quick<br />Answers</h2>
-            <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '14px', marginTop: 12 }}>Can't find your answer here? Reach out and we'll respond within 24 hours.</p>
-            <Link to="/contact" className="btn-ghost" style={{ marginTop: 20, display: 'inline-flex' }}>Ask Us Anything →</Link>
+            <h2 className="sec-heading faq-aside-heading">Quick<br />Answers</h2>
+            <p className="faq-aside-note">Can&apos;t find your answer here? Reach out and we&apos;ll respond within 24 hours.</p>
+            <Link to="/contact" className="faq-aside-cta">
+              Ask Us Anything
+              <span className="btn-arrow" aria-hidden="true">→</span>
+            </Link>
           </div>
           <div>
             {faqs.map((f, i) => (
@@ -221,36 +226,12 @@ export default function Home() {
           </div>
         </section>
 
-        {/* WHY ALLIED AXIS — after View all services (reference) */}
-        <section className="section section-dark home-why">
-          <div className="container">
-            <div className="home-why-layout">
-              <FadeSection className="home-why-copy">
-                <span className="sec-label">Why Allied Axis</span>
-                <h2 className="home-why-title">
-                  <span className="home-why-title-line">We don&apos;t just market.</span>
-                  <span className="home-why-title-line accent">We build systems.</span>
-                </h2>
-                <p className="home-why-intro">{whyIntro}</p>
-                <Link to="/portfolio" className="home-why-cta">See Our Results →</Link>
-              </FadeSection>
-              <div className="home-why-grid">
-                {whyItems.map((w) => {
-                  const Icon = w.icon;
-                  return (
-                    <ServiceHoverCard key={w.title} variant="why" className="why-card--home">
-                      <div className="why-icon" style={{ background: w.bg, color: w.color }}>
-                        {Icon ? <Icon aria-hidden /> : null}
-                      </div>
-                      <h3>{w.title}</h3>
-                      <p>{w.desc}</p>
-                    </ServiceHoverCard>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </section>
+        <HomeWhySection
+          intro={whyIntro}
+          whyItems={whyItems}
+          trustBrands={home?.whyTrustBrands ?? whyTrustBrands}
+          featurePillars={home?.whyFeaturePillars ?? whyFeaturePillars}
+        />
 
         {/* HOW WE WORK — directly after Why (reference) */}
         <section className="section section-dark home-process process-section">
@@ -362,7 +343,7 @@ export default function Home() {
           <div className="home-testi-grid">
             {featuredTestimonials.map((t, i) => (
               <FadeSection key={t.id}>
-                <HomeTestimonialCard testimonial={t} index={i} featured={i === 1} />
+                <HomeTestimonialCard testimonial={t} index={i} />
               </FadeSection>
             ))}
           </div>

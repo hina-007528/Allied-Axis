@@ -13,6 +13,7 @@ const testimonialSchema = new mongoose.Schema(
     rating: { type: Number, default: 5, min: 1, max: 5 },
     metric: { value: String, label: String },
     avatar: { type: String },
+    image: { type: String },
     theme: { type: String },
     avatarIndex: { type: Number, default: 0 },
     featured: { type: Boolean, default: false },

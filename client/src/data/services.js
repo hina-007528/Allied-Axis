@@ -76,27 +76,52 @@ const services = [
 export const launchPackages = [
   {
     name: 'Essential Launch',
+    accent: '#7c3aed',
     items: ['Logo Design', 'Letterhead Design', 'Business Card Design', '5-Page Website Development', 'Professional Email Setup', 'Basic Social Accounts Setup'],
   },
   {
     name: 'Growth Launch',
+    accent: '#e05c26',
     description: 'Everything in Essential Launch, plus:',
     items: ['30-Day Content Calendar', '10 Reel Scripts', 'Basic Digital Growth Strategy'],
   },
   {
     name: 'Complete Launch',
+    accent: '#10b981',
     description: 'Everything in Growth Launch, plus:',
     items: ['Lead Generation System', 'Full Brand Guidelines', 'Stock Media Library', '2 Content Calendars', '1 Month Social Media Management'],
   },
 ];
 
 export const monthlyRetainers = [
-  { service: 'Search & Growth Intelligence', included: 'Keyword strategy, on-page SEO, technical audits, competitor tracking, and monthly performance reporting.' },
-  { service: 'Social Media Management', included: 'Daily posting, engagement, reels, analytics, community management, and executive LinkedIn branding.' },
-  { service: 'Lead Generation & Outreach', included: 'Prospect lists, multi-channel outreach, CRM setup, pipeline tracking, and weekly lead reports.' },
-  { service: 'Paid Media Management', included: 'Meta, Google, LinkedIn & TikTok campaigns with creative production, retargeting, and ROAS reporting.' },
-  { service: 'Content & Authority Systems', included: 'SEO blog posts, case studies, website copy, email copy, and content distribution.' },
-  { service: 'Strategy & Advisory', included: 'Executive workshops, digital maturity assessment, fractional advisory, and growth roadmaps.' },
+  {
+    service: 'Search & Growth Intelligence',
+    included: 'Keyword strategy, on-page SEO, backlink tracking, technical audits, monthly report',
+  },
+  {
+    service: 'Social Media Management',
+    included: 'Daily posting, engagement, reels, community management, monthly analytics',
+  },
+  {
+    service: 'Performance Marketing Systems',
+    included: 'Meta, Google, LinkedIn & TikTok — ad creative, retargeting, A/B testing, ROAS reporting',
+  },
+  {
+    service: 'Authority Content Systems',
+    included: 'SEO blog posts, website copy, case studies, content distribution, strategy',
+  },
+  {
+    service: 'Email Marketing',
+    included: 'Campaigns, automation flows, nurture sequences, list management, performance tracking',
+  },
+  {
+    service: 'Lead Generation System',
+    included: 'Prospect list building, outreach templates, CRM pipeline management, weekly reports',
+  },
+  {
+    service: 'Website Maintenance',
+    included: 'Updates, backups, security patches, minor changes, 24/7 monitoring',
+  },
 ];
 
 export default services;

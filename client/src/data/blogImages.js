@@ -2,9 +2,11 @@
  * Cover images for blog cards.
  * First two About posts use site assets; others use client/public/images/blog/*.jpg
  */
+import { MARYAM_IMAGE } from './teamMedia';
+
 const SITE_ASSETS = {
   'who-is-maryam-fatima': {
-    src: '/images/maryam.jpeg',
+    src: MARYAM_IMAGE,
     fit: 'cover',
     objectPosition: 'center 18%',
   },

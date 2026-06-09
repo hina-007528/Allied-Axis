@@ -11,7 +11,7 @@ import {
 import PAGE_CONTENT, { STATIC_CLIENT_LOGOS, STATIC_FAQS } from '../data/pageContentBundle';
 import staticBlogs from '../data/blogs';
 import staticCaseStudies from '../data/caseStudies';
-import staticTestimonials from '../data/testimonials';
+import staticTestimonials, { dedupeTestimonials } from '../data/testimonials';
 import staticServices from '../data/services';
 import { leadership as staticLeadership } from '../data/teamPage';
 
@@ -77,6 +77,7 @@ function mapTestimonial(t, index = 0) {
     rating: t.rating,
     metric: t.metric,
     avatar: t.avatar,
+    image: t.image,
     theme: t.theme || TESTI_THEMES[i % TESTI_THEMES.length],
     avatarIndex: t.avatarIndex ?? i % 8,
     isFeatured: t.isFeatured ?? t.featured,
@@ -154,13 +155,21 @@ export function SiteDataProvider({ children }) {
 
   const pages = useMemo(() => {
     if (bootstrap?.pages && Object.keys(bootstrap.pages).length > 0) {
-      return { ...PAGE_CONTENT, ...bootstrap.pages };
+      const merged = { ...PAGE_CONTENT, ...bootstrap.pages };
+      const staticFounder = PAGE_CONTENT['about-founder'];
+      if (staticFounder?.founderCertifications?.length) {
+        merged['about-founder'] = {
+          ...merged['about-founder'],
+          founderCertifications: staticFounder.founderCertifications,
+        };
+      }
+      return merged;
     }
     return PAGE_CONTENT;
   }, [bootstrap]);
 
   const faqs = bootstrap?.faqs?.length ? bootstrap.faqs : STATIC_FAQS;
-  const clientLogos = bootstrap?.clientLogos?.length ? bootstrap.clientLogos : STATIC_CLIENT_LOGOS;
+  const clientLogos = STATIC_CLIENT_LOGOS;
 
   const value = useMemo(
     () => ({
@@ -251,16 +260,20 @@ export function useServices() {
 async function loadTestimonials() {
   try {
     const res = await testimonialService.getAll();
-    if (res?.data?.length) return res.data.map((t, i) => mapTestimonial(t, i));
+    if (res?.data?.length) {
+      return dedupeTestimonials(res.data.map((t, i) => mapTestimonial(t, i)));
+    }
   } catch {
     /* static fallback */
   }
-  return staticTestimonials.map((t, i) => mapTestimonial(t, i));
+  return dedupeTestimonials(staticTestimonials.map((t, i) => mapTestimonial(t, i)));
 }
 
 export function useTestimonials() {
   const { data, loading } = useApiCache('testimonials', loadTestimonials);
-  const testimonials = data ?? staticTestimonials.map((t, i) => mapTestimonial(t, i));
+  const testimonials = dedupeTestimonials(
+    data ?? staticTestimonials.map((t, i) => mapTestimonial(t, i))
+  );
   return { testimonials, loading: loading && !data };
 }
 

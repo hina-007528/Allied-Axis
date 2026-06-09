@@ -36,8 +36,19 @@ function splitNode(node, container) {
   }
 }
 
+function revealWords(words) {
+  gsap.set(words, { y: '0%', opacity: 1, clearProps: 'transform,opacity' });
+}
+
+function isHeadingInView(el) {
+  const rect = el.getBoundingClientRect();
+  return rect.top < window.innerHeight * 0.92 && rect.bottom > 0;
+}
+
 export function initSplitHeadings() {
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const selectors = '.sec-heading:not(.about-page-title), .hero h1, .hero-title, .home-why-title, .page-header h1:not(.about-page-title)';
+
   document.querySelectorAll(selectors).forEach((el) => {
     if (el.dataset.luxurySplit === '1') return;
     el.dataset.luxurySplit = '1';
@@ -51,19 +62,36 @@ export function initSplitHeadings() {
     const words = el.querySelectorAll('.split-word');
     if (!words.length) return;
 
+    if (reducedMotion) {
+      revealWords(words);
+      return;
+    }
+
+    const inView = isHeadingInView(el);
     gsap.set(words, { y: '110%', opacity: 0, force3D: true });
-    gsap.to(words, {
+
+    const tweenConfig = {
       y: '0%',
       opacity: 1,
       duration: 0.85,
       ease: 'power3.out',
       stagger: 0.04,
       force3D: true,
-      scrollTrigger: {
-        trigger: el,
-        start: 'top 88%',
-        once: true,
-      },
-    });
+    };
+
+    if (inView) {
+      gsap.to(words, tweenConfig);
+    } else {
+      gsap.to(words, {
+        ...tweenConfig,
+        scrollTrigger: {
+          trigger: el,
+          start: 'top 88%',
+          once: true,
+        },
+      });
+    }
+
+    window.setTimeout(() => revealWords(words), 2500);
   });
 }

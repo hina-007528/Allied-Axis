@@ -161,5 +161,6 @@ html.lenis, html.lenis body { height: auto; }
 
 @media (prefers-reduced-motion: reduce) {
   .founder-3d-glow { opacity: 0.5; }
-  .fade-in { opacity: 1; transform: none; transition: none; }
+  .fade-in { opacity: 1; transform: none; transition: none; animation: none; }
+  .split-word { opacity: 1 !important; transform: none !important; }
 }

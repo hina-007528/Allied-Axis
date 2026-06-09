@@ -1,3 +1,5 @@
+import { MARYAM_IMAGE } from './teamMedia';
+
 export const hiringPerks = [
   {
     icon: '🚀',
@@ -24,7 +26,7 @@ export const leadership = [
     color: '#e05c26',
     tag: 'CEO & FOUNDER',
     title: 'International Digital Launch Strategist',
-    image: '/images/maryam.jpeg',
+    image: MARYAM_IMAGE,
     imageFirst: true,
     bio: 'Maryam founded Allied Axis after 3+ years of hands-on execution across UAE, UK, and Pakistan. Holding 19+ global certifications, she has generated 500+ B2B leads in a single week for a global commodities firm, and launched a tourism startup from zero digital presence to six-figure revenue in just 14 days — building the systems that deliver, every time.',
     certsLabel: '19+ GLOBAL CERTIFICATIONS',

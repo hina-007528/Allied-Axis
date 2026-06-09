@@ -6,6 +6,7 @@ import {
   founderCertsLabel,
 } from '../../data/aboutFounder';
 import { publicImageSrc } from '../../utils/publicImageSrc';
+import { MARYAM_IMAGE } from '../../data/teamMedia';
 
 function CertTile({ cert }) {
   return (
@@ -31,8 +32,8 @@ export default function AboutFounderSection() {
           <aside className="about-founder-profile">
             <div className="about-founder-avatar-wrap">
               <img
-                src={publicImageSrc('/images/maryam.jpeg')}
-                alt=""
+                src={publicImageSrc(MARYAM_IMAGE)}
+                alt="Maryam Fatima, Founder and CEO of Allied Axis"
                 className="about-founder-avatar"
                 loading="lazy"
                 decoding="async"

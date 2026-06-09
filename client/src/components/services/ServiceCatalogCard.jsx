@@ -13,6 +13,7 @@ import {
   FaVideo,
   FaBullseye,
   FaHandshake,
+  FaMap,
   FaArrowUp,
 } from 'react-icons/fa';
 
@@ -31,6 +32,7 @@ const iconMap = {
   target: FaBullseye,
   bullseye: FaBullseye,
   handshake: FaHandshake,
+  map: FaMap,
 };
 
 export default function ServiceCatalogCard({ service, index }) {
@@ -45,11 +47,14 @@ export default function ServiceCatalogCard({ service, index }) {
       <span className="srv-catalog-num" aria-hidden="true">
         {num}
       </span>
-      <div
-        className="srv-catalog-icon"
-        style={{ background: `${service.accent}22`, color: service.accent }}
-      >
-        <Icon aria-hidden="true" />
+      <div className="srv-catalog-icon">
+        {service.emoji ? (
+          <span className="srv-catalog-emoji" aria-hidden="true">
+            {service.emoji}
+          </span>
+        ) : (
+          <Icon aria-hidden="true" style={{ color: service.accent }} />
+        )}
       </div>
       <h3 className="srv-catalog-title">{service.title}</h3>
       <p className="srv-catalog-desc">{service.description}</p>

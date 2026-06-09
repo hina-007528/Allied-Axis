@@ -22,13 +22,14 @@ export default function Testimonials() {
   const { content: page } = usePageContent('testimonials-page');
   const [sectionRef, inView] = useInView(0.04);
 
-  const { featured, rowThree, gridSix, bottomSingle } = useMemo(() => {
-    const featuredItem = testimonials.find((t) => t.featured) || testimonials[2];
+  const { rowThree, gridRest, bottomSingle } = useMemo(() => {
+    const sorted = [...testimonials].sort(
+      (a, b) => Number(a.id ?? a.legacyId) - Number(b.id ?? b.legacyId)
+    );
     return {
-      featured: featuredItem,
-      rowThree: testimonials.filter((t) => [1, 2, 4].includes(Number(t.id))),
-      gridSix: testimonials.filter((t) => [1, 2, 4, 5, 6, 7].includes(Number(t.id))),
-      bottomSingle: testimonials.find((t) => Number(t.id) === 8),
+      rowThree: sorted.slice(0, 3),
+      gridRest: sorted.slice(3, 7),
+      bottomSingle: sorted[7] ?? null,
     };
   }, [testimonials]);
 
@@ -54,12 +55,6 @@ export default function Testimonials() {
 
       <section ref={sectionRef} className="section section-gray testimonials-cards-section">
         <div className="container">
-          {featured && (
-            <FadeSection>
-              <TestimonialCard testimonial={featured} variant="featured" />
-            </FadeSection>
-          )}
-
           <div className="testi-ref-row-three">
             {rowThree.map((t) => (
               <FadeSection key={t.id}>
@@ -69,8 +64,8 @@ export default function Testimonials() {
           </div>
 
           <div className="testi-ref-grid-six">
-            {gridSix.map((t) => (
-              <FadeSection key={`grid-${t.id}`}>
+            {gridRest.map((t) => (
+              <FadeSection key={t.id}>
                 <TestimonialCard testimonial={t} />
               </FadeSection>
             ))}
