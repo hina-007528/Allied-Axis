@@ -90,12 +90,22 @@ export default function TeamApplyForm() {
       }
 
       if (data.success) {
+        const emailNote =
+          data.emailSent === false || data.thankYouSent === false
+            ? ' (Saved, but email alert failed — we will still review your application.)'
+            : '';
         setStatus({
           type: 'success',
           msg:
-            data.message ||
-            'Thank you! Your application was received. We will review it and get back to you soon.',
+            (data.message ||
+              'Thank you! Your application was received. We will review it and get back to you soon.') + emailNote,
         });
+        if (data.emailSent === false && data.emailError) {
+          console.warn('Application notification email not sent:', data.emailError);
+        }
+        if (data.thankYouSent === false && data.thankYouError) {
+          console.warn('Application thank-you email not sent:', data.thankYouError);
+        }
         setForm({ name: '', email: '', role: '' });
         setCvFile(null);
         setHoneypot('');

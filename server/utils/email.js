@@ -83,8 +83,10 @@ async function sendViaResend({ to, subject, html, text, replyTo, attachments }) 
           ? fs.readFileSync(file.path).toString('base64')
           : Buffer.isBuffer(file.content)
             ? file.content.toString('base64')
-            : Buffer.from(file.content).toString('base64'),
+            : Buffer.from(file.content || []).toString('base64'),
       };
+      const contentType = file.contentType || file.content_type || file.mimetype;
+      if (contentType) item.content_type = contentType;
       if (file.cid) item.content_id = file.cid;
       return item;
     });
@@ -402,6 +404,7 @@ async function sendTeamApplicationEmail(application, file) {
   const attachment = {
     filename: file.originalname || application.cvFileName || 'cv.pdf',
     content: file.buffer,
+    contentType: file.mimetype || application.cvMimeType || 'application/pdf',
   };
 
   if (isResendConfigured()) {

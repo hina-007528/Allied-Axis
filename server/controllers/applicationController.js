@@ -30,25 +30,41 @@ exports.submitTeamApplication = asyncHandler(async (req, res) => {
     buffer: Buffer.from(req.file.buffer),
   };
 
+  let emailSent = false;
+  let thankYouSent = false;
+  let emailError = null;
+  let thankYouError = null;
+
+  try {
+    emailSent = await sendTeamApplicationEmail(application, fileSnapshot);
+    if (emailSent) {
+      logger.info(`Team application email sent for ${application._id}`);
+    } else {
+      logger.warn(`Team application email skipped — not configured (${application._id})`);
+      emailError = 'Email not configured';
+    }
+  } catch (err) {
+    emailError = err.message;
+    logger.error(`Team application email failed for ${application._id}: ${err.message}`);
+  }
+
+  try {
+    thankYouSent = await sendApplicationThankYouEmail(application);
+    if (thankYouSent) {
+      logger.info(`Application thank-you email sent to ${application.email} (${application._id})`);
+    }
+  } catch (err) {
+    thankYouError = err.message;
+    logger.error(`Application thank-you email failed for ${application._id}: ${err.message}`);
+  }
+
   res.status(201).json({
     success: true,
     message: 'Thank you! Your application was received. We will review it and get back to you soon.',
     data: { id: application._id },
+    emailSent,
+    thankYouSent,
+    ...(emailError ? { emailError } : {}),
+    ...(thankYouError ? { thankYouError } : {}),
   });
-
-  sendTeamApplicationEmail(application, fileSnapshot)
-    .then((sent) => {
-      if (sent) logger.info(`Team application email sent for ${application._id}`);
-    })
-    .catch((err) => {
-      logger.error(`Team application email failed for ${application._id}: ${err.message}`);
-    });
-
-  sendApplicationThankYouEmail(application)
-    .then((sent) => {
-      if (sent) logger.info(`Application thank-you email sent to ${application.email} (${application._id})`);
-    })
-    .catch((err) => {
-      logger.error(`Application thank-you email failed for ${application._id}: ${err.message}`);
-    });
 });
