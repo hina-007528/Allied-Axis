@@ -37,6 +37,12 @@ const homeSrvIcons = [
   <span key="4" className="srv-icon-ad">Ad</span>,
 ];
 
+const HERO_MARKETS = [
+  { code: 'PK', label: 'Pakistan', flag: '/images/flags/pk.png' },
+  { code: 'GB', label: 'United Kingdom', flag: '/images/flags/gb.png' },
+  { code: 'AE', label: 'United Arab Emirates', flag: '/images/flags/ae.png' },
+];
+
 const homeMetrics = [
   { value: '15+', label: 'BUSINESSES SCALED', sub: 'Across UAE · UK · Pakistan' },
   { value: '500+', label: 'QUALIFIED LEADS / WEEK', sub: 'Via AI-powered outreach' },
@@ -152,13 +158,35 @@ export default function Home() {
               </div>
               <h1 className="hero-title">
                 <span className="hero-title-line hero-title-white">We Build</span>
-                <span className="hero-title-line hero-title-accent">AI-Powered Revenue Systems </span>
+                <span className="hero-title-line hero-title-accent">AI-Powered Revenue Systems</span>
                 <span className="hero-title-line hero-title-white">for Scratch</span>
               </h1>
               <p className="hero-sub">
-                We build AI-Powered digital systems that convert qualified leads and turn your brand
-                into a client-attracting machine.
+                AI-powered growth systems that generate qualified leads, automate sales, and help
+                businesses <span className="hero-sub-accent">scale faster.</span>
               </p>
+              <div className="hero-divider" aria-hidden="true" />
+              <div className="hero-regions-strip" aria-label="Markets we serve">
+                {HERO_MARKETS.map((market, index) => (
+                  <span key={market.code} className="hero-regions-strip-item">
+                    {index > 0 && <span className="hero-regions-dot" aria-hidden="true" />}
+                    <span className="hero-region-entry">
+                      <span className="hero-region-flag-ring">
+                        <img
+                          className="hero-region-flag-img"
+                          src={market.flag}
+                          alt=""
+                          width={36}
+                          height={36}
+                          loading="eager"
+                          decoding="async"
+                        />
+                      </span>
+                      <span className="hero-region-label">{market.label}</span>
+                    </span>
+                  </span>
+                ))}
+              </div>
               <div className="hero-btns">
                 <a
                   href="https://wa.me/971585882972?text=Hi%2C%20I%27d%20like%20to%20book%20a%20free%20consultation"

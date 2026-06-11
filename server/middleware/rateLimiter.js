@@ -20,4 +20,10 @@ const contactLimiter = rateLimit({
   message: { success: false, error: 'Too many submissions. Please try again later.' },
 });
 
-module.exports = { apiLimiter, authLimiter, contactLimiter };
+const applyLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 5,
+  message: { success: false, error: 'Too many application attempts. Please try again later.' },
+});
+
+module.exports = { apiLimiter, authLimiter, contactLimiter, applyLimiter };

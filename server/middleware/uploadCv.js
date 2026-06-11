@@ -1,24 +1,18 @@
 const path = require('path');
 const multer = require('multer');
 const AppError = require('../utils/AppError');
-
-const ALLOWED_TYPES = new Set([
-  'application/pdf',
-  'application/msword',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-]);
-const ALLOWED_EXT = new Set(['.pdf', '.doc', '.docx']);
+const { ALLOWED_EXT, ALLOWED_MIMES } = require('../utils/cvValidation');
 
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 5 * 1024 * 1024, files: 1 },
   fileFilter: (_req, file, cb) => {
     const ext = path.extname(file.originalname || '').toLowerCase();
-    if (ALLOWED_TYPES.has(file.mimetype) || ALLOWED_EXT.has(ext)) {
-      cb(null, true);
+    if (!ALLOWED_EXT.has(ext) || !ALLOWED_MIMES.has(file.mimetype)) {
+      cb(new Error('CV must be a PDF, DOC, or DOCX file.'));
       return;
     }
-    cb(new Error('CV must be a PDF, DOC, or DOCX file.'));
+    cb(null, true);
   },
 });
 

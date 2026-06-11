@@ -1,5 +1,12 @@
+const fs = require('fs');
 const nodemailer = require('nodemailer');
 const logger = require('./logger');
+const { sanitizeSubjectPart } = require('./formSecurity');
+const {
+  formatContactOrAuditThankYou,
+  formatApplicationThankYou,
+} = require('./contactThankYouTemplate');
+const { getEmailIconAttachments } = require('./emailIconAttachments');
 
 const SERVICE_LABELS = {
   branding: 'Branding & Creative',
@@ -22,6 +29,10 @@ function smtpPassword() {
     .trim()
     .replace(/^["']|["']$/g, '')
     .replace(/\s/g, '');
+}
+
+function getSmtpFromAddress() {
+  return String(process.env.FROM_EMAIL || process.env.SMTP_USER || '').trim();
 }
 
 function isResendConfigured() {
@@ -65,12 +76,18 @@ async function sendViaResend({ to, subject, html, text, replyTo, attachments }) 
   };
   if (replyTo) payload.reply_to = replyTo;
   if (attachments?.length) {
-    payload.attachments = attachments.map((file) => ({
-      filename: file.filename,
-      content: Buffer.isBuffer(file.content)
-        ? file.content.toString('base64')
-        : Buffer.from(file.content).toString('base64'),
-    }));
+    payload.attachments = attachments.map((file) => {
+      const item = {
+        filename: file.filename,
+        content: file.path
+          ? fs.readFileSync(file.path).toString('base64')
+          : Buffer.isBuffer(file.content)
+            ? file.content.toString('base64')
+            : Buffer.from(file.content).toString('base64'),
+      };
+      if (file.cid) item.content_id = file.cid;
+      return item;
+    });
   }
 
   const res = await fetch('https://api.resend.com/emails', {
@@ -158,6 +175,7 @@ function toEmailContact(contact) {
     service: doc.service,
     budget: doc.budget,
     message: doc.message,
+    source: doc.source,
     createdAt: doc.createdAt,
   };
 }
@@ -232,7 +250,7 @@ async function sendContactLeadEmail(contact) {
 
   const lead = toEmailContact(contact);
   const to = String(process.env.CONTACT_NOTIFY_EMAIL || process.env.SMTP_USER || '').trim();
-  const subject = `[Allied Axis] New lead: ${lead.name}${lead.company ? ` — ${lead.company}` : ''}`;
+  const subject = `[Allied Axis] New lead: ${sanitizeSubjectPart(lead.name)}${lead.company ? ` — ${sanitizeSubjectPart(lead.company)}` : ''}`;
   const text = formatContactText(lead);
   const html = formatContactHtml(lead);
 
@@ -242,8 +260,8 @@ async function sendContactLeadEmail(contact) {
   }
 
   const fromName = process.env.FROM_NAME || 'Allied Axis';
-  const fromAddress = String(process.env.SMTP_USER || '').trim();
-  logger.info(`Sending contact lead via SMTP to ${to} lead=${lead._id}`);
+  const fromAddress = getSmtpFromAddress();
+  logger.info(`Sending contact lead via SMTP from ${fromAddress} to ${to} lead=${lead._id}`);
 
   const info = await withSmtpTransport((transport) =>
     transport.sendMail({
@@ -258,6 +276,82 @@ async function sendContactLeadEmail(contact) {
 
   logger.info(`Contact notification delivered to ${to} — ${info.messageId}`);
   return true;
+}
+
+async function sendAutoReplyEmail({ to, subject, html, text, logLabel, refId }) {
+  if (!isEmailConfigured()) {
+    logger.warn(`Email not configured — ${logLabel} thank-you skipped`);
+    return false;
+  }
+
+  const recipient = String(to || '').trim();
+  if (!recipient) {
+    logger.warn(`${logLabel} thank-you skipped — no recipient address`);
+    return false;
+  }
+
+  const fromName = process.env.FROM_NAME || 'Allied Axis';
+  const replyTo = String(process.env.FROM_EMAIL || process.env.CONTACT_NOTIFY_EMAIL || '').trim();
+  const inlineIcons = getEmailIconAttachments();
+
+  if (isResendConfigured()) {
+    logger.info(`Sending ${logLabel} thank-you via Resend to ${recipient}${refId ? ` ref=${refId}` : ''}`);
+    return sendViaResend({
+      to: recipient,
+      subject,
+      html,
+      text,
+      replyTo: replyTo || undefined,
+      attachments: inlineIcons,
+    });
+  }
+
+  const fromAddress = getSmtpFromAddress();
+  logger.info(`Sending ${logLabel} thank-you via SMTP from ${fromAddress} to ${recipient}${refId ? ` ref=${refId}` : ''}`);
+
+  const info = await withSmtpTransport((transport) =>
+    transport.sendMail({
+      from: `"${fromName}" <${fromAddress}>`,
+      to: recipient,
+      replyTo: replyTo || fromAddress,
+      subject,
+      text,
+      html,
+      attachments: inlineIcons,
+    })
+  );
+
+  logger.info(`${logLabel} thank-you delivered to ${recipient} — ${info.messageId}`);
+  return true;
+}
+
+/** Contact or audit form auto-reply (variant picked from lead source). */
+async function sendContactThankYouEmail(contact) {
+  const lead = toEmailContact(contact);
+  const { subject, html, text } = formatContactOrAuditThankYou(lead);
+  const logLabel = lead.source === 'home-audit-banner' ? 'audit' : 'contact';
+  return sendAutoReplyEmail({
+    to: lead.email,
+    subject,
+    html,
+    text,
+    logLabel,
+    refId: lead._id,
+  });
+}
+
+/** Careers / CV apply form auto-reply. */
+async function sendApplicationThankYouEmail(application) {
+  const doc = application?.toObject ? application.toObject() : application;
+  const { subject, html, text } = formatApplicationThankYou(doc);
+  return sendAutoReplyEmail({
+    to: doc.email,
+    subject,
+    html,
+    text,
+    logLabel: 'application',
+    refId: doc._id,
+  });
 }
 
 function formatTeamApplicationHtml(application) {
@@ -302,7 +396,7 @@ async function sendTeamApplicationEmail(application, file) {
   }
 
   const to = String(process.env.CONTACT_NOTIFY_EMAIL || process.env.SMTP_USER || '').trim();
-  const subject = `[Allied Axis] Job application: ${application.name}${application.role ? ` — ${application.role}` : ''}`;
+  const subject = `[Allied Axis] Job application: ${sanitizeSubjectPart(application.name)}${application.role ? ` — ${sanitizeSubjectPart(application.role)}` : ''}`;
   const text = formatTeamApplicationText(application);
   const html = formatTeamApplicationHtml(application);
   const attachment = {
@@ -350,6 +444,8 @@ async function sendTeamApplicationEmail(application, file) {
 
 module.exports = {
   sendContactLeadEmail,
+  sendContactThankYouEmail,
+  sendApplicationThankYouEmail,
   sendTeamApplicationEmail,
   isSmtpConfigured,
   isEmailConfigured,

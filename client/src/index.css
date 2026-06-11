@@ -1772,6 +1772,11 @@ h1, h2, h3, h4, h5 { font-family: var(--font-display); line-height: 1.2; font-we
   .hero h1 { font-size: 28px; letter-spacing: -0.5px; }
   .hero-sub { font-size: 15px; margin-bottom: 24px; }
   .hero-pill { font-size: 12px; padding: 5px 12px; margin-bottom: 16px; }
+
+  .hero--reference .hero-inner { gap: 28px; }
+  .hero--reference .hero-title { font-size: 26px; }
+  .hero--reference .hero-sub { font-size: 14px; }
+  .hero--reference .hero-btns .btn { font-size: 13px; padding: 12px 16px; }
   .hero-stats-rings { gap: 24px 16px; }
   .hero-stat-ring-visual { width: 128px; height: 128px; --ring-orbit: 50px; }
   .hero-stat-ring-value { font-size: 24px; }

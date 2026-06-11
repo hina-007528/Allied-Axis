@@ -1,12 +1,10 @@
 import { useEffect } from 'react';
 import ContactCta from '../common/ContactCta';
-import { usePageContent } from '../../context/SiteDataContext';
+import { aboutEngagementStats } from '../../data/aboutEngagement';
 import useInView from '../../hooks/useInView';
 import { initCardBorderGlow } from '../../utils/cardBorderGlow';
 
 export default function AboutEngagementSection() {
-  const { content } = usePageContent('about-engagement');
-  const aboutEngagementStats = content?.aboutEngagementStats || [];
   const [sectionRef, inView] = useInView(0.05);
 
   useEffect(() => {

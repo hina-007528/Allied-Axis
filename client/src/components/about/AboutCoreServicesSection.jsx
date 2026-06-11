@@ -1,4 +1,8 @@
-import { usePageContent } from '../../context/SiteDataContext';
+import {
+  aboutCoreServiceRows,
+  aboutCoreServicesFootnote,
+  aboutMissionVision,
+} from '../../data/aboutCoreServices';
 
 function ServiceItem({ item }) {
   return (
@@ -18,11 +22,6 @@ function ServiceItem({ item }) {
 }
 
 export default function AboutCoreServicesSection() {
-  const { content } = usePageContent('about-core-services');
-  const aboutCoreServiceRows = content?.aboutCoreServiceRows || [];
-  const aboutCoreServicesFootnote = content?.aboutCoreServicesFootnote || '';
-  const aboutMissionVision = content?.aboutMissionVision || [];
-
   return (
     <section className="about-core-services-wrap">
       <div className="about-core-services-light section">

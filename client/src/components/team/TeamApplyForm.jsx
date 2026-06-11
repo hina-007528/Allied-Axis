@@ -1,10 +1,18 @@
 import { useRef, useState } from 'react';
 import { FaUpload } from 'react-icons/fa';
 import { getApiBase } from '../../utils/apiBase';
+import {
+  FIELD_LIMITS,
+  formSecurityFields,
+  honeypotInputProps,
+  validateApplyForm,
+} from '../../utils/formValidation';
 
 export default function TeamApplyForm() {
+  const formStartedAt = useRef(Date.now());
   const fileRef = useRef(null);
   const [form, setForm] = useState({ name: '', email: '', role: '' });
+  const [honeypot, setHoneypot] = useState('');
   const [cvFile, setCvFile] = useState(null);
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -13,19 +21,12 @@ export default function TeamApplyForm() {
   const onFileChange = (file) => {
     setFileError(null);
     if (!file) return;
-    const allowed = [
-      'application/pdf',
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    ];
-    const ext = file.name.split('.').pop()?.toLowerCase();
-    const okExt = ['pdf', 'doc', 'docx'].includes(ext || '');
-    if (!allowed.includes(file.type) && !okExt) {
-      setFileError('Please upload a PDF, DOC, or DOCX file.');
-      return;
-    }
-    if (file.size > 5 * 1024 * 1024) {
-      setFileError('File must be 5 MB or smaller.');
+
+    const validation = validateApplyForm(form, file);
+    if (!validation.ok) {
+      setFileError(validation.message);
+      setCvFile(null);
+      if (fileRef.current) fileRef.current.value = '';
       return;
     }
     setCvFile(file);
@@ -33,8 +34,14 @@ export default function TeamApplyForm() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    if (!cvFile) {
-      setFileError('Please upload your CV.');
+
+    const validation = validateApplyForm(form, cvFile);
+    if (!validation.ok) {
+      if (validation.message.includes('CV')) {
+        setFileError(validation.message);
+      } else {
+        setStatus({ type: 'error', msg: validation.message });
+      }
       return;
     }
 
@@ -42,11 +49,14 @@ export default function TeamApplyForm() {
     setStatus(null);
     setFileError(null);
 
+    const security = formSecurityFields(formStartedAt.current, honeypot);
     const body = new FormData();
     body.append('name', form.name.trim());
-    body.append('email', form.email.trim());
+    body.append('email', form.email.trim().toLowerCase());
     body.append('role', form.role.trim());
     body.append('cv', cvFile);
+    body.append('formStartedAt', String(security.formStartedAt));
+    body.append('websiteUrl', security.websiteUrl);
 
     try {
       if (!/^https?:\/\//i.test(getApiBase())) {
@@ -88,6 +98,8 @@ export default function TeamApplyForm() {
         });
         setForm({ name: '', email: '', role: '' });
         setCvFile(null);
+        setHoneypot('');
+        formStartedAt.current = Date.now();
         if (fileRef.current) fileRef.current.value = '';
       } else {
         setStatus({
@@ -107,6 +119,22 @@ export default function TeamApplyForm() {
 
   return (
     <form className="team-apply-form" onSubmit={onSubmit} noValidate>
+      <div
+        className="form-honeypot"
+        aria-hidden="true"
+        style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', overflow: 'hidden' }}
+      >
+        <label htmlFor="apply-website-url">Website URL</label>
+        <input
+          {...honeypotInputProps}
+          type="text"
+          id="apply-website-url"
+          name="websiteUrl"
+          value={honeypot}
+          onChange={(e) => setHoneypot(e.target.value)}
+        />
+      </div>
+
       <div className="team-apply-grid">
         <label className="team-apply-field">
           <span className="team-apply-label">
@@ -116,6 +144,8 @@ export default function TeamApplyForm() {
             type="text"
             name="name"
             required
+            minLength={2}
+            maxLength={FIELD_LIMITS.name}
             placeholder="Your full name"
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
@@ -129,6 +159,7 @@ export default function TeamApplyForm() {
             type="email"
             name="email"
             required
+            maxLength={FIELD_LIMITS.email}
             placeholder="your@email.com"
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
@@ -142,6 +173,7 @@ export default function TeamApplyForm() {
           <input
             type="text"
             name="role"
+            maxLength={FIELD_LIMITS.role}
             placeholder="e.g. Graphic Designer, Social Media Manager..."
             value={form.role}
             onChange={(e) => setForm({ ...form, role: e.target.value })}

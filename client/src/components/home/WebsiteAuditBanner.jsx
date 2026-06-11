@@ -1,5 +1,11 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { contactService } from '../../services/api';
+import { getApiBase } from '../../utils/apiBase';
+import {
+  formSecurityFields,
+  honeypotInputProps,
+  validateAuditEmail,
+} from '../../utils/formValidation';
 
 function AuditIllustration() {
   return (
@@ -21,15 +27,26 @@ function AuditIllustration() {
 }
 
 export default function WebsiteAuditBanner() {
+  const formStartedAt = useRef(Date.now());
   const [email, setEmail] = useState('');
+  const [honeypot, setHoneypot] = useState('');
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const trimmed = email.trim();
-    if (!trimmed || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
-      setStatus({ type: 'error', msg: 'Please enter a valid email address.' });
+
+    const validation = validateAuditEmail(email);
+    if (!validation.ok) {
+      setStatus({ type: 'error', msg: validation.message });
+      return;
+    }
+
+    if (!/^https?:\/\//i.test(getApiBase())) {
+      setStatus({
+        type: 'error',
+        msg: 'Site configuration error. Please email info@alliedaxis.digital',
+      });
       return;
     }
 
@@ -38,16 +55,19 @@ export default function WebsiteAuditBanner() {
     try {
       await contactService.submit({
         name: 'Website Audit Request',
-        email: trimmed,
+        email: validation.email,
         message: 'Requested free website audit from homepage banner.',
         service: 'Free Website Audit',
         source: 'home-audit-banner',
+        ...formSecurityFields(formStartedAt.current, honeypot),
       });
       setStatus({
         type: 'success',
         msg: 'Thanks! We will send your free audit report soon.',
       });
       setEmail('');
+      setHoneypot('');
+      formStartedAt.current = Date.now();
     } catch (err) {
       setStatus({
         type: 'error',
@@ -70,6 +90,22 @@ export default function WebsiteAuditBanner() {
           </p>
         </div>
         <form className="home-audit-form" onSubmit={handleSubmit} noValidate>
+          <div
+            className="form-honeypot"
+            aria-hidden="true"
+            style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', overflow: 'hidden' }}
+          >
+            <label htmlFor="audit-website-url">Website URL</label>
+            <input
+              {...honeypotInputProps}
+              type="text"
+              id="audit-website-url"
+              name="websiteUrl"
+              value={honeypot}
+              onChange={(e) => setHoneypot(e.target.value)}
+            />
+          </div>
+
           <label className="visually-hidden" htmlFor="home-audit-email">
             Email address
           </label>
@@ -83,6 +119,7 @@ export default function WebsiteAuditBanner() {
             disabled={loading}
             autoComplete="email"
             required
+            maxLength={254}
           />
           <button type="submit" className="btn btn-hero-primary home-audit-submit" disabled={loading}>
             {loading ? 'Sending…' : 'Send Me the Audit'}

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { MdOutlineChatBubbleOutline, MdOutlineSchedule } from 'react-icons/md';
 import {
   contactFormContent,
@@ -7,9 +7,37 @@ import {
 } from '../../data/contactPageContent';
 import { contactService } from '../../services/api';
 import { getApiBase } from '../../utils/apiBase';
+import {
+  FIELD_LIMITS,
+  formSecurityFields,
+  honeypotInputProps,
+  validateContactForm,
+} from '../../utils/formValidation';
+
+function FormHoneypot({ value, onChange }) {
+  return (
+    <div
+      className="form-honeypot"
+      aria-hidden="true"
+      style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', overflow: 'hidden' }}
+    >
+      <label htmlFor="contact-website-url">Website URL</label>
+      <input
+        {...honeypotInputProps}
+        type="text"
+        id="contact-website-url"
+        name="websiteUrl"
+        value={value}
+        onChange={onChange}
+      />
+    </div>
+  );
+}
 
 export default function ContactFormPanel() {
+  const formStartedAt = useRef(Date.now());
   const [tab, setTab] = useState('message');
+  const [honeypot, setHoneypot] = useState('');
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -29,32 +57,24 @@ export default function ContactFormPanel() {
     setLoading(true);
     setStatus(null);
 
+    const validation = validateContactForm(form);
+    if (!validation.ok) {
+      setStatus({ type: 'error', msg: validation.message });
+      setLoading(false);
+      return;
+    }
+
     const payload = {
       name: form.name.trim(),
-      email: form.email.trim(),
+      email: form.email.trim().toLowerCase(),
       phone: form.phone.trim(),
       company: form.company.trim(),
       service: form.service,
       budget: form.budget,
       message: form.message.trim(),
       intent: tab,
+      ...formSecurityFields(formStartedAt.current, honeypot),
     };
-
-    if (!payload.name || !payload.email || !payload.phone || !payload.company) {
-      setStatus({ type: 'error', msg: 'Please fill in all required fields.' });
-      setLoading(false);
-      return;
-    }
-    if (!payload.service || !payload.budget) {
-      setStatus({ type: 'error', msg: 'Please select a service and budget range.' });
-      setLoading(false);
-      return;
-    }
-    if (!payload.message) {
-      setStatus({ type: 'error', msg: 'Please enter a message before submitting.' });
-      setLoading(false);
-      return;
-    }
 
     try {
       if (!/^https?:\/\//i.test(getApiBase())) {
@@ -79,6 +99,7 @@ export default function ContactFormPanel() {
         if (data.emailSent === false && data.emailError) {
           console.warn('Contact email not sent:', data.emailError);
         }
+        formStartedAt.current = Date.now();
         setForm({
           name: '',
           email: '',
@@ -88,6 +109,7 @@ export default function ContactFormPanel() {
           budget: '',
           message: '',
         });
+        setHoneypot('');
       } else {
         setStatus({ type: 'error', msg: data.error || 'Something went wrong. Please try again.' });
       }
@@ -135,6 +157,8 @@ export default function ContactFormPanel() {
       <p className="contact-form-note">{contactFormContent.note}</p>
 
       <form className="contact-form" onSubmit={handleSubmit} noValidate>
+        <FormHoneypot value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+
         {status && (
           <div className={status.type === 'success' ? 'form-success' : 'form-error'} role="alert">
             {status.msg}
@@ -153,6 +177,8 @@ export default function ContactFormPanel() {
               value={form.name}
               onChange={onChange}
               required
+              minLength={2}
+              maxLength={FIELD_LIMITS.name}
               placeholder="Your full name"
             />
           </div>
@@ -167,6 +193,7 @@ export default function ContactFormPanel() {
               value={form.email}
               onChange={onChange}
               required
+              maxLength={FIELD_LIMITS.email}
               placeholder="you@company.com"
             />
           </div>
@@ -184,6 +211,8 @@ export default function ContactFormPanel() {
               value={form.company}
               onChange={onChange}
               required
+              minLength={2}
+              maxLength={FIELD_LIMITS.company}
               placeholder="Your company"
             />
           </div>
@@ -198,6 +227,7 @@ export default function ContactFormPanel() {
               value={form.phone}
               onChange={onChange}
               required
+              maxLength={FIELD_LIMITS.phone}
               placeholder="+971 58 588 2972"
             />
           </div>
@@ -247,6 +277,8 @@ export default function ContactFormPanel() {
             value={form.message}
             onChange={onChange}
             required
+            minLength={10}
+            maxLength={FIELD_LIMITS.message}
             rows={5}
             placeholder="Share where you are today and what success looks like in 90 days…"
           />

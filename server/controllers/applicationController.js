@@ -2,25 +2,22 @@ const TeamApplication = require('../models/TeamApplication');
 const asyncHandler = require('../utils/asyncHandler');
 const AppError = require('../utils/AppError');
 const logger = require('../utils/logger');
-const { sendTeamApplicationEmail } = require('../utils/email');
+const { assertValidCvFile } = require('../utils/cvValidation');
+const { sendTeamApplicationEmail, sendApplicationThankYouEmail } = require('../utils/email');
 
 exports.submitTeamApplication = asyncHandler(async (req, res) => {
   if (!req.file) {
     throw new AppError('Please upload your CV (PDF, DOC, or DOCX).', 400);
   }
 
-  const name = (req.body.name || '').trim();
-  const email = (req.body.email || '').trim().toLowerCase();
-  const role = (req.body.role || '').trim();
-
-  if (!name) throw new AppError('Full name is required.', 400);
-  if (!email) throw new AppError('Email address is required.', 400);
+  const { safeName } = assertValidCvFile(req.file);
+  const { name, email, role } = req.body;
 
   const application = await TeamApplication.create({
     name,
     email,
-    role,
-    cvFileName: req.file.originalname,
+    role: role || '',
+    cvFileName: safeName,
     cvMimeType: req.file.mimetype,
     cvSize: req.file.size,
   });
@@ -28,7 +25,7 @@ exports.submitTeamApplication = asyncHandler(async (req, res) => {
   logger.info(`New team application from ${application.email} (${application._id})`);
 
   const fileSnapshot = {
-    originalname: req.file.originalname,
+    originalname: safeName,
     mimetype: req.file.mimetype,
     buffer: Buffer.from(req.file.buffer),
   };
@@ -45,5 +42,13 @@ exports.submitTeamApplication = asyncHandler(async (req, res) => {
     })
     .catch((err) => {
       logger.error(`Team application email failed for ${application._id}: ${err.message}`);
+    });
+
+  sendApplicationThankYouEmail(application)
+    .then((sent) => {
+      if (sent) logger.info(`Application thank-you email sent to ${application.email} (${application._id})`);
+    })
+    .catch((err) => {
+      logger.error(`Application thank-you email failed for ${application._id}: ${err.message}`);
     });
 });

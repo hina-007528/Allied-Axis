@@ -1,12 +1,10 @@
 import { useEffect } from 'react';
-import { usePageContent } from '../../context/SiteDataContext';
+import { aboutMarkets } from '../../data/aboutMarkets';
 import useInView from '../../hooks/useInView';
 import { publicImageSrc } from '../../utils/publicImageSrc';
 import { initCardBorderGlow } from '../../utils/cardBorderGlow';
 
 export default function AboutMarketsSection() {
-  const { content } = usePageContent('about-markets');
-  const aboutMarkets = content?.aboutMarkets || [];
   const [sectionRef, inView] = useInView(0.05);
 
   useEffect(() => {

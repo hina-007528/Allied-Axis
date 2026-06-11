@@ -3,42 +3,35 @@ const Subscriber = require('../models/Subscriber');
 const asyncHandler = require('../utils/asyncHandler');
 const AppError = require('../utils/AppError');
 const logger = require('../utils/logger');
-const { sendContactLeadEmail } = require('../utils/email');
+const { sendContactLeadEmail, sendContactThankYouEmail } = require('../utils/email');
 
-exports.submitContact = asyncHandler(async (req, res, next) => {
-  const intent = req.body.intent;
-  const payload = {
-    name: String(req.body.name || '').trim(),
-    email: String(req.body.email || '').trim().toLowerCase(),
-    phone: String(req.body.phone || '').trim(),
-    company: String(req.body.company || '').trim(),
-    service: String(req.body.service || '').trim(),
-    budget: String(req.body.budget || '').trim(),
-    message: String(req.body.message || '').trim(),
+function buildContactPayload(body) {
+  const intent = body.intent;
+  return {
+    name: body.name,
+    email: body.email,
+    phone: body.phone || '',
+    company: body.company || '',
+    service: body.service || '',
+    budget: body.budget || '',
+    message: body.message,
     source:
-      req.body.source ||
+      body.source ||
       (intent === 'call' ? 'contact-call' : intent === 'message' ? 'contact-message' : 'website'),
   };
+}
 
+exports.submitContact = asyncHandler(async (req, res) => {
+  const payload = buildContactPayload(req.body);
   const isAuditLead = payload.source === 'home-audit-banner';
-
-  if (!payload.name) return next(new AppError('Name is required', 400));
-  if (!payload.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) {
-    return next(new AppError('Valid email is required', 400));
-  }
-  if (!payload.message) return next(new AppError('Message is required', 400));
-  if (!isAuditLead && !payload.service) {
-    return next(new AppError('Please select a service', 400));
-  }
-  if (!isAuditLead && !payload.budget) {
-    return next(new AppError('Please select a budget range', 400));
-  }
 
   const contact = await Contact.create(payload);
   logger.info(`New contact submission from ${contact.email} (${contact._id})`);
 
   let emailSent = false;
+  let thankYouSent = false;
   let emailError = null;
+  let thankYouError = null;
 
   try {
     emailSent = await sendContactLeadEmail(contact);
@@ -56,12 +49,26 @@ exports.submitContact = asyncHandler(async (req, res, next) => {
     });
   }
 
+  try {
+    thankYouSent = await sendContactThankYouEmail(contact);
+    if (thankYouSent) {
+      logger.info(`Contact thank-you email sent to ${contact.email} (${contact._id})`);
+    }
+  } catch (err) {
+    thankYouError = err.message;
+    logger.error(`Contact thank-you email failed for ${contact._id}: ${err.message}`);
+  }
+
   res.status(201).json({
     success: true,
-    message: 'Thank you for reaching out. We will get back to you within 24 hours.',
+    message: isAuditLead
+      ? 'Thank you! Your free audit request is confirmed. We will email you within 24–48 hours.'
+      : 'Thank you for reaching out. We will get back to you within 24 hours.',
     data: { id: contact._id },
     emailSent,
+    thankYouSent,
     ...(emailError ? { emailError } : {}),
+    ...(thankYouError ? { thankYouError } : {}),
   });
 });
 
