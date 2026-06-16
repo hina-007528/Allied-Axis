@@ -1,19 +1,13 @@
-import useCountUp from '../../hooks/useCountUp';
-
 export default function TestimonialAnimatedMetric({
   value,
   label,
-  active,
   variant = 'headline',
-  delay = 0,
   accent,
 }) {
-  const { display } = useCountUp(value, active, 2000, delay);
-
   if (variant === 'badge') {
     return (
       <p className="testi-ref-metric-badge" style={{ '--testi-accent': accent }}>
-        <strong aria-live="polite">{display}</strong> {label}
+        <strong>{value}</strong> {label}
       </p>
     );
   }
@@ -21,7 +15,7 @@ export default function TestimonialAnimatedMetric({
   if (variant === 'sidebar') {
     return (
       <div className="testi-ref-side-metric" style={{ '--testi-accent': accent }}>
-        <span className="testi-ref-side-metric-val" aria-live="polite">{display}</span>
+        <span className="testi-ref-side-metric-val">{value}</span>
         <span className="testi-ref-side-metric-lbl">{label}</span>
       </div>
     );
@@ -29,9 +23,7 @@ export default function TestimonialAnimatedMetric({
 
   return (
     <div className="testi-ref-metric-head" style={{ '--testi-accent': accent }}>
-      <span className="testi-ref-metric-value" aria-live="polite">
-        {display}
-      </span>
+      <span className="testi-ref-metric-value">{value}</span>
       <span className="testi-ref-metric-label">{label}</span>
     </div>
   );

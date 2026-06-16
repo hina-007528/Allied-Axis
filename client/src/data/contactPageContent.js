@@ -83,6 +83,7 @@ export const contactServiceOptions = [
 
 export const contactBudgetOptions = [
   { value: '', label: 'Select range' },
+  { value: 'under-1k', label: 'Under $1,000' },
   { value: 'under-5k', label: 'Under $5,000' },
   { value: '5k-15k', label: '$5,000 – $15,000' },
   { value: '15k-30k', label: '$15,000 – $30,000' },

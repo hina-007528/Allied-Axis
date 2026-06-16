@@ -64,7 +64,7 @@ const caseStudies = [
   },
   {
     id: 8, title: 'Private School Enrollment', slug: 'education-enrollment',
-    client: 'Private School', industry: 'Education / Private Schooling', market: 'UAE',
+    client: 'Private School', industry: 'Education / Private Schooling', market: 'Pakistan',
     problem: 'Strong academic reputation but low inquiry-to-enrollment conversion. Outdated website, mobile-unfriendly, 15-field inquiry form causing 70% abandonment.',
     solution: 'Allied Axis implemented a complete enrollment conversion system — website redesign, automated inquiry response, CRM for admissions, parent referral program, and paid campaigns.',
     solutionPoints: ['Website redesign — Mobile-first, simplified inquiry form', 'Automated inquiry response — WhatsApp/SMS within 5 minutes', 'CRM for admissions — tracked every inquiry to enrollment', 'Parent referral program — structured referral mechanism', 'Paid campaigns — Meta and Google targeting school keywords'],

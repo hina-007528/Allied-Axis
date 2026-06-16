@@ -37,7 +37,7 @@ export const aboutProofCards = [
   },
   {
     title: 'Private School',
-    subtitle: 'Enrollment overhaul',
+    subtitle: 'Enrollment overhaul · Pakistan',
     result: '40% more inquiries · 25% yield increase · 15 parent referrals',
   },
 ];

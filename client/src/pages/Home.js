@@ -159,7 +159,7 @@ export default function Home() {
               <h1 className="hero-title">
                 <span className="hero-title-line hero-title-white">We Build</span>
                 <span className="hero-title-line hero-title-accent">AI-Powered Revenue Systems</span>
-                <span className="hero-title-line hero-title-white">for Scratch</span>
+                <span className="hero-title-line hero-title-white">from Scratch</span>
               </h1>
               <p className="hero-sub">
                 AI-powered growth systems that generate qualified leads, automate sales, and help

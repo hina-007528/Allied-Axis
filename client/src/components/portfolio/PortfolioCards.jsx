@@ -12,7 +12,7 @@ const THEMES = [
 function marketTag(cs) {
   const industry = (cs.industry || 'Client').split('/')[0].trim().toUpperCase();
   const market = cs.market || '';
-  const region = market.includes('UAE') ? 'UAE' : market.includes('UK') ? 'UK' : 'GLOBAL';
+  const region = market.includes('UAE') ? 'UAE' : market.includes('UK') ? 'UK' : market.includes('Pakistan') ? 'PK 🇵🇰' : 'GLOBAL';
   return `${industry} · ${region}`;
 }
 
