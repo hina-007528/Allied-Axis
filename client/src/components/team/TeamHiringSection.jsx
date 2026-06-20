@@ -1,4 +1,6 @@
 import useInView from '../../hooks/useInView';
+import { Link } from 'react-router-dom';
+import { FaArrowRight } from 'react-icons/fa';
 import { hiringPerks } from '../../data/teamPage';
 import { teamHiringIntro } from '../../data/teamPageContent';
 import TeamApplyForm from './TeamApplyForm';
@@ -52,6 +54,12 @@ export default function TeamHiringSection() {
 
         <div className="team-apply-wrap">
           <TeamApplyForm />
+        </div>
+
+        <div style={{ textAlign: 'center', marginTop: '60px', paddingBottom: '20px' }}>
+          <Link to="/blog" className="btn btn-hero-primary">
+            Explore Our Blog <FaArrowRight className="btn-arrow" aria-hidden="true" />
+          </Link>
         </div>
       </div>
     </section>

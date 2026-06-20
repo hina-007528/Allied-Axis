@@ -15,9 +15,9 @@ export default function Privacy() {
             <h2>Data Security</h2>
             <p>We implement industry-standard security measures to protect your personal information. All data transmission is encrypted using SSL/TLS protocols.</p>
             <h2>Your Rights</h2>
-            <p>You have the right to access, correct, or delete your personal data. To exercise these rights, contact us at info@alliedaxis.digital.</p>
+            <p>You have the right to access, correct, or delete your personal data. To exercise these rights, contact us at <a href="mailto:info@alliedaxis.digital">info@alliedaxis.digital</a>.</p>
             <h2>Contact</h2>
-            <p>For privacy-related inquiries: info@alliedaxis.digital | +971 58 588 2972</p>
+            <p>For privacy-related inquiries: <a href="mailto:info@alliedaxis.digital">info@alliedaxis.digital</a> | +971 58 588 2972</p>
           </div>
         </div>
       </section>

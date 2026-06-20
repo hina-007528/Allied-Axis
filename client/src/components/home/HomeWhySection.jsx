@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { FaPhone } from 'react-icons/fa';
+import { FaWhatsapp } from 'react-icons/fa';
 import useInView from '../../hooks/useInView';
 import HomeWhyCard from './HomeWhyCard';
 import { withResolvedIcons } from '../../utils/resolveIcon';
@@ -36,10 +36,15 @@ export default function HomeWhySection({
               <Link to="/portfolio" className="btn btn-hero-primary">
                 See Our Results →
               </Link>
-              <Link to="/contact" className="btn btn-hero-ghost home-why-btn-secondary">
-                <FaPhone aria-hidden />
-                Book a Strategy Call
-              </Link>
+              <a
+                href="https://wa.me/923001234567"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-hero-ghost home-why-btn-secondary"
+              >
+                <FaWhatsapp aria-hidden />
+                WhatsApp Us
+              </a>
             </div>
             {trustBrands.length > 0 && (
               <div className="home-why-trust">

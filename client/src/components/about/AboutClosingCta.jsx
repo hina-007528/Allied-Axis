@@ -1,4 +1,5 @@
-import ContactCta from '../common/ContactCta';
+import { Link } from 'react-router-dom';
+import { FaArrowRight } from 'react-icons/fa';
 
 export default function AboutClosingCta() {
   return (
@@ -15,9 +16,9 @@ export default function AboutClosingCta() {
         <p className="about-closing-cta-note">
           No retainer required. No pressure. Just a real strategy session.
         </p>
-        <ContactCta className="btn btn-hero-primary about-closing-cta-btn" arrow>
-          Book Strategy Call
-        </ContactCta>
+        <Link to="/services" className="btn btn-hero-primary about-closing-cta-btn">
+          Explore Our Services <FaArrowRight className="btn-arrow" aria-hidden="true" />
+        </Link>
       </div>
     </section>
   );

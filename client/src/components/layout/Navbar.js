@@ -24,10 +24,11 @@ export default function Navbar() {
     { to: '/services', label: 'Services' },
     { to: '/portfolio', label: 'Portfolio' },
     { to: '/b2b-growth', label: 'B2B Growth' },
+    { to: '/education', label: 'Education' },
     { to: '/team', label: 'Team' },
     { to: '/blog', label: 'Blog' },
     { to: '/testimonials', label: 'Testimonials' },
-    { to: '/contact', label: 'Contact' },
+    // { to: '/contact', label: 'Contact' },
   ];
 
   const isActive = (to) => pathname === to || (to !== '/' && pathname.startsWith(to));
@@ -49,7 +50,7 @@ export default function Navbar() {
                 {l.label}
               </Link>
             ))}
-            <ContactCta>Book Strategy Call</ContactCta>
+            <ContactCta>Contact</ContactCta>
           </div>
           <button
             className={`hamburger${open ? ' open' : ''}`}

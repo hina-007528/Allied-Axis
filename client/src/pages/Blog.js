@@ -7,6 +7,8 @@ import BlogPageHero from '../components/blog/BlogPageHero';
 import BlogFeaturedCard from '../components/blog/BlogFeaturedCard';
 import BlogPostCard from '../components/blog/BlogPostCard';
 import DataLoading from '../components/common/DataLoading';
+import { Link } from 'react-router-dom';
+import { FaArrowRight } from 'react-icons/fa';
 import { initCardBorderGlow } from '../utils/cardBorderGlow';
 
 const catOverlays = {
@@ -74,6 +76,12 @@ export default function Blog() {
               </FadeSection>
             ))}
           </div>
+        </div>
+
+        <div style={{ textAlign: 'center', marginTop: '60px', paddingBottom: '40px' }}>
+          <Link to="/testimonials" className="btn btn-hero-primary">
+            Read Client Testimonials <FaArrowRight className="btn-arrow" aria-hidden="true" />
+          </Link>
         </div>
       </section>
     </div>

@@ -17,7 +17,7 @@ export default function Terms() {
             <h2>Limitation of Liability</h2>
             <p>Allied Axis provides professional services with reasonable care and skill. Results referenced in case studies represent specific client outcomes and are not guaranteed for future engagements.</p>
             <h2>Contact</h2>
-            <p>For legal inquiries: info@alliedaxis.digital | +971 58 588 2972</p>
+            <p>For legal inquiries: <a href="mailto:info@alliedaxis.digital">info@alliedaxis.digital</a> | +971 58 588 2972</p>
           </div>
         </div>
       </section>

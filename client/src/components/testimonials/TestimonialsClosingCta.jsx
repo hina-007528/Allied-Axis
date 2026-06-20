@@ -1,8 +1,9 @@
-import ContactCta from '../common/ContactCta';
+import { Link } from 'react-router-dom';
+import { FaArrowRight } from 'react-icons/fa';
 import { testimonialsClosingCta } from '../../data/testimonialsPageContent';
 
 export default function TestimonialsClosingCta() {
-  const { heading, headingAccent, sub, ctaLabel } = testimonialsClosingCta;
+  const { heading, headingAccent, sub } = testimonialsClosingCta;
 
   return (
     <section className="section testimonials-closing-cta">
@@ -13,9 +14,9 @@ export default function TestimonialsClosingCta() {
           <span className="testimonials-closing-cta-heading-accent">{headingAccent}</span>
         </h2>
         <p className="testimonials-closing-cta-sub">{sub}</p>
-        <ContactCta className="btn btn-hero-primary testimonials-closing-cta-btn" arrow>
-          {ctaLabel}
-        </ContactCta>
+        <Link to="/contact" className="btn btn-hero-primary testimonials-closing-cta-btn">
+          Get in Touch <FaArrowRight className="btn-arrow" aria-hidden="true" />
+        </Link>
       </div>
     </section>
   );

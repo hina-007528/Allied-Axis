@@ -52,6 +52,12 @@ const CARD_SELECTOR = [
   '.card-beam',
   '.growth-build-card',
   '.why-card--home',
+  '.edu-problem-card',
+  '.edu-deliverable-card',
+  '.edu-result-card',
+  '.edu-target-card',
+  '.edu-scenario-card',
+  '.edu-cta-price-card',
 ].join(', ');
 
 const ACCENT_CSS_VARS = [

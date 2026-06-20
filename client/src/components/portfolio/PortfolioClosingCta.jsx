@@ -1,8 +1,9 @@
-import ContactCta from '../common/ContactCta';
+import { Link } from 'react-router-dom';
+import { FaArrowRight } from 'react-icons/fa';
 import { portfolioClosingCta } from '../../data/portfolioPageContent';
 
 export default function PortfolioClosingCta() {
-  const { heading, headingAccent, sub, ctaLabel } = portfolioClosingCta;
+  const { heading, headingAccent, sub } = portfolioClosingCta;
 
   return (
     <section className="section portfolio-closing-cta">
@@ -12,9 +13,9 @@ export default function PortfolioClosingCta() {
           {heading} <span className="portfolio-closing-cta-heading-accent">{headingAccent}</span>
         </h2>
         <p className="portfolio-closing-cta-sub">{sub}</p>
-        <ContactCta className="btn btn-hero-primary portfolio-closing-cta-btn" arrow>
-          {ctaLabel}
-        </ContactCta>
+        <Link to="/b2b-growth" className="btn btn-hero-primary portfolio-closing-cta-btn">
+          Explore B2B Growth <FaArrowRight className="btn-arrow" aria-hidden="true" />
+        </Link>
       </div>
     </section>
   );
