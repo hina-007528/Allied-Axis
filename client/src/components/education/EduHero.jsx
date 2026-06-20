@@ -23,7 +23,7 @@ export default function EduHero() {
       <div className="container">
         <div ref={ref} className={`edu-hero-inner fade-in ${visible ? 'visible' : ''}`}>
           {/* Label pill */}
-          <div className="edu-hero-pill" role="text">
+          <div className="edu-hero-pill">
             <span className="edu-hero-pill-dot" aria-hidden="true" />
             Education Sector · Pakistan's #1 Admission System
           </div>
