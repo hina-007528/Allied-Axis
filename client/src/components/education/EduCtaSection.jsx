@@ -37,11 +37,11 @@ export default function EduCtaSection() {
               href="https://wa.me/923251518471?text=I%20would%20like%20to%20book%20a%20free%2010-minute%20admissions%20assessment."
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-primary edu-cta-btn-primary"
+              className="btn btn-primary edu-cta-btn-primary edu-btn-assessment"
               id="edu-assessment-cta"
             >
               <FaWhatsapp aria-hidden />
-              Book Your Free Assessment →
+              Book Your Free 10-Minute Assessment →
             </a>
             <Link
               to="/portfolio"

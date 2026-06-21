@@ -49,7 +49,7 @@ export default function EduAssessmentSection() {
               href="https://wa.me/923251518471"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-primary edu-cta-btn-primary"
+              className="btn btn-primary edu-cta-btn-primary edu-btn-assessment"
             >
               <FaWhatsapp aria-hidden />
               Book Your Free 10-Minute Assessment →

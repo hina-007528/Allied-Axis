@@ -2474,4 +2474,13 @@ h1, h2, h3, h4, h5 { font-family: var(--font-display); line-height: 1.2; font-we
   .edu-process-dot-icon { font-size: 18px; }
   .edu-process-line { left: 22px; }
   .edu-faq-cta-box { padding: 24px 18px; }
+  
+  .edu-btn-assessment {
+    font-size: 13px !important;
+    padding: 12px 16px !important;
+    white-space: normal !important;
+    text-align: center;
+    line-height: 1.4;
+    height: auto;
+  }
 }
