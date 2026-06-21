@@ -4,55 +4,46 @@ import { FaCheckCircle } from 'react-icons/fa';
 const deliverables = [
   {
     icon: '📋',
-    title: 'Centralized Inquiry Tracker',
-    desc: '1 Google Sheet with inquiry database, dashboard, follow-up reminders, and reporting tabs — complete visibility for leadership.',
-    badge: 'Day 1–3',
+    title: 'Centralised Inquiry Dashboard',
+    desc: 'Every inquiry — WhatsApp, Facebook, phone, walk-in, referral — captured in one tracker. Single source of truth. Leadership sees the full pipeline at any moment.',
     color: '#10b981',
   },
   {
     icon: '💬',
-    title: 'WhatsApp Quick Replies',
-    desc: '7 ready-to-use templates: /fee, /process, /visit, /documents, /contact, /timeline, /faqs — respond instantly.',
-    badge: 'Day 2–3',
+    title: 'WhatsApp Business + Auto-Response Templates',
+    desc: '7 professional templates for the most common parent questions. Auto-acknowledgement so responses happen immediately, not the next morning. Parents feel heard.',
     color: '#3b82f6',
   },
   {
     icon: '🔄',
     title: 'Structured Follow-Up Workflow',
-    desc: 'Automated sequence Day 0–14: Inquiry → Welcome → Follow-up Call → Share Info → Close/Convert.',
-    badge: 'Day 3–4',
+    desc: 'A documented Day 2, Day 4, Day 7, Day 10 follow-up schedule. Every inquiry gets assigned a next-action date. Nothing falls through.',
     color: '#7c3aed',
   },
   {
     icon: '🎓',
-    title: 'Staff Training (2 Sessions)',
-    desc: 'Two live training sessions covering system usage, response handling, and go-live readiness. Full team independence.',
-    badge: 'Day 4 & 7',
+    title: 'Staff Training (2 Live Sessions)',
+    desc: 'Your admissions team operates the system independently from day one. No ongoing dependency on us. You own it completely.',
     color: '#e05c26',
   },
   {
     icon: '📡',
-    title: 'Broadcast Lists',
-    desc: 'Separate lists for prospects, current parents, and waitlist families with pre-written engagement templates.',
-    badge: 'Day 5–6',
+    title: 'Broadcast Lists & Automated Communication',
+    desc: 'Separate lists for prospects, current parents, waitlist families. Pre-written templates for announcements, reminders, updates. Consistent communication without manual effort.',
     color: '#f59e0b',
   },
   {
     icon: '📈',
     title: 'Weekly Performance Reports',
-    desc: 'Four weekly reports covering inquiries, response times, admissions, and conversion metrics — data-driven optimization.',
-    badge: 'Week 2–4',
+    desc: 'Inquiry volume. Response times. Follow-up completion. Pipeline status. Leadership reviews data, not impressions.',
     color: '#ec4899',
   },
-];
-
-const timeline = [
-  { day: 'Day 1', task: 'Discovery & Process Review' },
-  { day: 'Day 2–3', task: 'System Setup' },
-  { day: 'Day 4', task: 'Training Session 1' },
-  { day: 'Day 5–6', task: 'Testing & Refinement' },
-  { day: 'Day 7', task: 'Go-Live & Training Session 2' },
-  { day: 'Week 2–4', task: 'Reporting & Optimization' },
+  {
+    icon: '🔧',
+    title: 'Performance Review & Optimisation',
+    desc: 'Week 2 checkpoint — we review message timing, response quality, workflow gaps. Adjustments made before full handover to your team.',
+    color: '#06b6d4',
+  },
 ];
 
 function DeliverableCard({ item, delay }) {
@@ -70,15 +61,12 @@ function DeliverableCard({ item, delay }) {
         >
           {item.icon}
         </div>
-        <span className="edu-deliverable-badge" style={{ background: `${item.color}22`, color: item.color }}>
-          {item.badge}
-        </span>
       </div>
       <h3 className="edu-deliverable-title">{item.title}</h3>
       <p className="edu-deliverable-desc">{item.desc}</p>
       <div className="edu-deliverable-check">
         <FaCheckCircle style={{ color: item.color }} aria-hidden />
-        <span>Included in Growth Package</span>
+        <span>Included</span>
       </div>
     </div>
   );
@@ -86,32 +74,32 @@ function DeliverableCard({ item, delay }) {
 
 export default function EduSolutionSection() {
   const [headerRef, headerVisible] = useInView(0.1);
-  const [timelineRef, timelineVisible] = useInView(0.1);
 
   return (
-    <section className="section section-dark edu-solution-section">
+    <section className="section section-dark edu-solution-section" id="what-we-build">
       <div className="container">
         <div
           ref={headerRef}
           className={`edu-section-header fade-in ${headerVisible ? 'visible' : ''}`}
         >
-          <span className="sec-label">The Solution</span>
+          <span className="sec-label">Your Admission Infrastructure</span>
           <h2 className="sec-heading" style={{ color: '#fff' }}>
-            Growth Package —{' '}
-            <span className="accent">Built in 14 Days</span>
+            Your Complete{' '}
+            <span className="accent">Inquiry Management System</span>
           </h2>
           <p className="sec-sub center" style={{ color: 'var(--text-on-dark-muted)' }}>
-            A complete admissions infrastructure setup. No subscriptions. No new software.
-            Runs entirely on WhatsApp Business and Google Sheets.
+            Seven components. One integrated system. Built in 7 to 14 days. Runs on
+            tools your staff already uses.
           </p>
         </div>
 
         {/* Zero software pill */}
         <div className="edu-zero-software">
-          <span>✅ Zero Subscription Fees</span>
+          <span>✅ Zero New Software</span>
+          <span>✅ Zero Subscriptions</span>
           <span>✅ WhatsApp Business</span>
           <span>✅ Google Sheets</span>
-          <span>✅ Done For You</span>
+          <span>✅ Zero Technical Expertise Required</span>
         </div>
 
         {/* Deliverables grid */}
@@ -119,36 +107,6 @@ export default function EduSolutionSection() {
           {deliverables.map((item, i) => (
             <DeliverableCard key={item.title} item={item} delay={i * 0.08} />
           ))}
-        </div>
-
-        {/* Implementation timeline */}
-        <div
-          ref={timelineRef}
-          className={`edu-timeline fade-in ${timelineVisible ? 'visible' : ''}`}
-        >
-          <h3 className="edu-timeline-title">Implementation Timeline</h3>
-          <div className="edu-timeline-track">
-            <div className="edu-timeline-line-bg" />
-            <div className="edu-timeline-line-fill" />
-            {timeline.map((step, i) => (
-              <div key={step.day} className="edu-timeline-step">
-                <div
-                  className="edu-timeline-dot"
-                  style={{
-                    transitionDelay: `${i * 0.2}s`,
-                    animationDelay: `${i * 0.2 + 0.4}s`,
-                  }}
-                />
-                <div
-                  className="edu-timeline-content"
-                  style={{ transitionDelay: `${i * 0.2 + 0.1}s` }}
-                >
-                  <span className="edu-timeline-day">{step.day}</span>
-                  <span className="edu-timeline-task">{step.task}</span>
-                </div>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
     </section>

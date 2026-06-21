@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { FaWhatsapp } from 'react-icons/fa';
 import useInView from '../../hooks/useInView';
 
@@ -6,10 +5,11 @@ export default function EduHero() {
   const [ref, visible] = useInView(0.1);
 
   const stats = [
-    { value: '30–50%', label: 'Leads Lost Monthly', icon: '📉' },
-    { value: '14 Days', label: 'To Full System', icon: '⚡' },
-    { value: 'Rs. 2.5M+', label: 'Annual Revenue Lost', icon: '💰' },
-    { value: '3+ Channels', label: 'Parents Contact Via', icon: '📲' },
+    { value: 'Delayed Responses', label: 'The #1 reason families move to another school', icon: '⏳' },
+    { value: '7–14 Days', label: 'To a fully operational inquiry system', icon: '⚡' },
+    { value: '1 Person', label: 'Most schools rely on to manage all admission channels', icon: '👤' },
+    { value: '3+ Channels', label: 'Parents contact through (WhatsApp, phone, walk-in, Facebook)', icon: '📲' },
+    { value: 'Many Parents', label: 'Contact multiple schools simultaneously', icon: '👥' },
   ];
 
   return (
@@ -25,7 +25,7 @@ export default function EduHero() {
           {/* Label pill */}
           <div className="edu-hero-pill">
             <span className="edu-hero-pill-dot" aria-hidden="true" />
-            Education Sector · Pakistan's #1 Admission System
+            Admission Systems · Pakistan
           </div>
 
           <h1 className="edu-hero-h1">
@@ -50,11 +50,11 @@ export default function EduHero() {
               className="btn btn-primary"
             >
               <FaWhatsapp aria-hidden />
-              WhatsApp Us Now
+              Talk to Us on WhatsApp →
             </a>
-            <Link to="/portfolio" className="btn btn-glass">
-              View Case Studies →
-            </Link>
+            <a href="#what-we-build" className="btn btn-glass">
+              See What We Build ↓
+            </a>
           </div>
 
           {/* Stats bar */}

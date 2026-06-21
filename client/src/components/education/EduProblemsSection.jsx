@@ -5,37 +5,37 @@ const problems = [
   {
     icon: '🗂️',
     title: 'No Central Tracking',
-    desc: 'Scattered channels mean leadership cannot track monthly conversions or know where leads come from.',
+    desc: 'WhatsApp messages, phone calls, Facebook comments, walk-ins — scattered across four channels with no single place to see them. By month-end, no one can tell you how many inquiries came in or how many converted.',
     color: '#e05c26',
   },
   {
     icon: '⏰',
-    title: 'Inconsistent Response',
-    desc: 'Late replies — weekend messages answered Monday — mean parents enroll elsewhere before you respond.',
+    title: 'Response Is Inconsistent',
+    desc: 'A parent messages Thursday evening. They get a reply Monday morning. By then, they\'ve already enrolled elsewhere. Speed matters. Consistency matters more.',
     color: '#7c3aed',
   },
   {
     icon: '👻',
-    title: 'Non-existent Follow-Ups',
-    desc: 'Parents who say "we\'ll think about it" are completely forgotten. Zero structured re-engagement.',
+    title: 'Follow-Up Doesn\'t Exist',
+    desc: 'A parent says "we\'ll think about it" and never hears from you again. There\'s no Day 3 call. No Day 7 message. No systematic approach. The inquiry just dies.',
     color: '#ef4444',
   },
   {
     icon: '🔗',
-    title: 'Single-Person Dependency',
-    desc: 'If your admissions coordinator is absent or leaves, the entire inquiry pipeline collapses overnight.',
+    title: 'Everything Lives in One Person\'s Head',
+    desc: 'When your admissions coordinator is absent, the process stops. When they leave, you lose institutional knowledge, continuity, and all your pending inquiries. That\'s not a system. That\'s a liability.',
     color: '#f59e0b',
   },
   {
     icon: '📊',
-    title: 'Blind Leadership',
-    desc: 'No concrete data on channel performance, conversion rates, or real-time inquiry volume.',
+    title: 'Leadership Is Flying Blind',
+    desc: 'You can\'t answer basic questions: How many families inquired this month? What\'s your conversion rate? Which channels perform best? You\'re operating on memory and season-end estimates.',
     color: '#10b981',
   },
   {
     icon: '💬',
-    title: 'Unresolved Public Outreach',
-    desc: 'Unanswered questions on Facebook posts cost active enrollments — publicly visible trust damage.',
+    title: 'Parents Research Before They Reach Out',
+    desc: 'Before contacting you, they check your Facebook, read reviews, and look for signs of responsiveness. Unanswered admission comments on your page cost you enrollments before the conversation even starts.',
     color: '#3b82f6',
   },
 ];
@@ -74,85 +74,6 @@ function ProblemCard({ item, index, delay }) {
   );
 }
 
-/* ── Animated SVG Arrow Connector ── */
-function AnimatedArrow() {
-  return (
-    <div className="edu-revenue-arrow" aria-hidden="true">
-      <svg className="edu-revenue-arrow-svg" viewBox="0 0 48 24" fill="none">
-        {/* dashed track */}
-        <line className="edu-revenue-arrow-line"
-          x1="4" y1="12" x2="40" y2="12" strokeWidth="1.5" />
-        {/* arrowhead */}
-        <path className="edu-revenue-arrow-head"
-          d="M36 7 L44 12 L36 17 Z" />
-        {/* travelling dot */}
-        <circle className="edu-revenue-arrow-dot" cx="4" cy="12" r="3" />
-      </svg>
-    </div>
-  );
-}
-
-/* ── Revenue Stat Box ── */
-function RevenueBox({ icon, iconBg, label, value, valClass, barClass, pct, pctLabel, delay }) {
-  const [ref, visible] = useInView(0.3);
-  return (
-    <div className="edu-revenue-box" ref={ref}>
-      <div className="edu-revenue-box-glow" style={{ background: iconBg }} />
-      <div className="edu-revenue-icon" style={{ background: `${iconBg}22`, color: iconBg }}>
-        {icon}
-      </div>
-      <span className="edu-revenue-label">{label}</span>
-      <span className={`edu-revenue-val ${valClass}`}>{value}</span>
-      <div className="edu-revenue-bar-track">
-        <div
-          className={`edu-revenue-bar ${barClass} ${visible ? 'is-animated' : ''}`}
-          style={{ transitionDelay: delay }}
-        />
-      </div>
-      <span className="edu-revenue-pct">{pctLabel}</span>
-    </div>
-  );
-}
-
-function RevenueVisual() {
-  return (
-    <div className="edu-revenue-visual">
-      <RevenueBox
-        icon="📬"
-        iconBg="#3b82f6"
-        label="Monthly Inquiries"
-        value="80–100"
-        valClass="edu-revenue-val--blue"
-        barClass="edu-revenue-bar--total"
-        pctLabel="100% incoming"
-        delay="0s"
-      />
-      <AnimatedArrow />
-      <RevenueBox
-        icon="📉"
-        iconBg="#ef4444"
-        label="Current Conversion"
-        value="30–40%"
-        valClass="edu-revenue-val--red"
-        barClass="edu-revenue-bar--converted"
-        pctLabel="Only 35% convert"
-        delay="0.15s"
-      />
-      <AnimatedArrow />
-      <RevenueBox
-        icon="💸"
-        iconBg="#e05c26"
-        label="Annual Revenue Lost"
-        value="Rs. 2.5M – 3M"
-        valClass="edu-revenue-val--orange"
-        barClass="edu-revenue-bar--lost"
-        pctLabel="65% leads walk away"
-        delay="0.3s"
-      />
-    </div>
-  );
-}
-
 export default function EduProblemsSection() {
   const [headerRef, headerVisible] = useInView(0.1);
 
@@ -163,19 +84,16 @@ export default function EduProblemsSection() {
           ref={headerRef}
           className={`edu-section-header fade-in ${headerVisible ? 'visible' : ''}`}
         >
-          <span className="sec-label">The Problem</span>
+          <span className="sec-label">The Real Issue</span>
           <h2 className="sec-heading">
-            Six Liabilities Draining{' '}
-            <span className="accent">Your Admissions</span>
+            Your Inquiry Process Isn't Broken.{' '}
+            <span className="accent">It Doesn't Exist.</span>
           </h2>
           <p className="sec-sub center">
-            Most private schools lose 30–50% of interested families — not because of price or quality,
-            but because of avoidable system failures.
+            Inquiries arrive. Staff respond when they remember. Some families get
+            follow-ups. Most don't. There's no system — just hope.
           </p>
         </div>
-
-        {/* Revenue loss visual */}
-        <RevenueVisual />
 
         {/* Scenario callout */}
         <div className="edu-scenario-card">

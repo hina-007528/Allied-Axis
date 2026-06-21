@@ -1,4 +1,4 @@
-import { FaWhatsapp, FaArrowRight } from 'react-icons/fa';
+import { FaWhatsapp } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import useInView from '../../hooks/useInView';
 
@@ -19,81 +19,46 @@ export default function EduCtaSection() {
           ref={ref}
           className={`edu-cta-inner fade-in ${visible ? 'visible' : ''}`}
         >
-          {/* Pilot badge */}
-          <div className="edu-cta-pilot-badge">
-            🎯 &nbsp; Pilot Offer — 50% Off Normal Price
-          </div>
-
           <h2 className="edu-cta-h2">
-            Ready to Stop Losing Families<br />
-            to Preventable Delays?
+            Prepare Your Admissions System<br />
+            Before Your Next Enrollment Cycle
           </h2>
           <p className="edu-cta-sub">
-            Get your school's complete admissions system live in 14 days.
-            Zero new software. Full team training included.
+            Every enrollment cycle, the difference between institutions with a working inquiry
+            system and those without becomes obvious. Not in reputation or fees. In the number of
+            families who reached out and were never followed up with.
           </p>
-
-          {/* Pricing card */}
-          <div className="edu-cta-price-card">
-            <div className="edu-cta-price-row">
-              <div className="edu-cta-price-item">
-                <span className="edu-cta-price-label">Pilot Investment</span>
-                <span className="edu-cta-price-val">Rs. 25,000</span>
-                <span className="edu-cta-price-cross">Normal: Rs. 50,000</span>
-              </div>
-              <div className="edu-cta-price-divider" />
-              <div className="edu-cta-price-item">
-                <span className="edu-cta-price-label">Payment Terms</span>
-                <span className="edu-cta-price-val" style={{ fontSize: '18px' }}>
-                  Rs. 12,500 Advance
-                </span>
-                <span className="edu-cta-price-cross" style={{ textDecoration: 'none', color: 'var(--text-on-dark-muted)' }}>
-                  + Rs. 12,500 On Go-Live
-                </span>
-              </div>
-              <div className="edu-cta-price-divider" />
-              <div className="edu-cta-price-item">
-                <span className="edu-cta-price-label">Optional Add-on</span>
-                <span className="edu-cta-price-val" style={{ fontSize: '18px' }}>10 Canva Templates</span>
-                <span className="edu-cta-price-cross" style={{ textDecoration: 'none', color: 'var(--text-on-dark-muted)' }}>
-                  Rs. 15,000
-                </span>
-              </div>
-            </div>
-          </div>
+          <p className="edu-cta-sub" style={{ fontWeight: 600 }}>
+            That gap is fixable. The time to fix it is now — before the next rush hits.
+          </p>
 
           <div className="edu-cta-btns">
             <a
-              href="https://wa.me/923251518471"
+              href="https://wa.me/923251518471?text=I%20would%20like%20to%20book%20a%20free%2010-minute%20admissions%20assessment."
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-primary edu-cta-btn-primary"
-              id="edu-whatsapp-cta"
+              id="edu-assessment-cta"
             >
               <FaWhatsapp aria-hidden />
-              WhatsApp Us — +92 325 1518471
+              Book Your Free Assessment →
             </a>
-            <a
-              href="mailto:info@alliedaxis.digital?subject=Education%20Admissions%20System%20Inquiry"
-              className="btn btn-glass"
-              id="edu-email-cta"
-            >
-              ✉️ &nbsp; info@alliedaxis.digital
-            </a>
-          </div>
-
-          <p className="edu-cta-note">
-            Founded by Maryam Fatima · B-17 resident · Allied Axis, Islamabad
-          </p>
-
-          {/* Sequential navigation link to Team Page */}
-          <div style={{ marginTop: '80px', paddingBottom: '20px' }}>
             <Link
-              to="/team"
-              className="btn btn-hero-primary"
+              to="/portfolio"
+              className="btn btn-glass"
+              id="edu-work-cta"
             >
-              Meet Our Team <FaArrowRight className="btn-arrow" aria-hidden="true" />
+              See Our Work
             </Link>
+          </div>
+          
+          <div style={{ marginTop: '80px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '40px' }}>
+            <p className="edu-cta-note">
+              Allied Axis · info@alliedaxis.digital · +971585882972 +92 325 1518471 © 2026 Allied Axis.
+            </p>
+            <p className="edu-cta-note">
+              Admission Inquiry Management Systems · Pakistan — Islamabad · Rawalpindi · Lahore · Karachi
+            </p>
           </div>
         </div>
       </div>
