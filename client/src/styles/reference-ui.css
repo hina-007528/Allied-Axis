@@ -2868,18 +2868,7 @@ body {
   }
 
   .about-founder-title {
-    font-size: 26px;
-    line-height: 1.25;
-  }
-  
-  .about-founder-title-sep {
-    display: none;
-  }
-  
-  .about-founder-title-accent {
-    display: block;
-    margin-top: 6px;
-    font-size: 20px;
+    font-size: 28px;
   }
 
   .about-founder-body {
