@@ -1,4 +1,4 @@
-import { FaCheck, FaLinkedin } from 'react-icons/fa';
+import { FaCheck } from 'react-icons/fa';
 import {
   founderAchievements,
   founderCertifications,
@@ -42,31 +42,20 @@ export default function AboutFounderSection() {
             <p className="about-founder-profile-name">Maryam Fatima</p>
             <p className="about-founder-profile-role">Founder &amp; CEO, Allied Axis</p>
             
-            <div className="about-founder-linkedin-btn-wrap" style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'center' }}>
-              <a 
-                href="https://pk.linkedin.com/in/the-maryam-fatima" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
-                  padding: '10px 24px',
-                  backgroundColor: '#0a66c2',
-                  color: '#ffffff',
-                  borderRadius: '30px',
-                  fontWeight: '600',
-                  textDecoration: 'none',
-                  fontSize: '0.95rem',
-                  transition: 'all 0.3s ease',
-                  boxShadow: '0 4px 14px rgba(10, 102, 194, 0.35)'
-                }}
-                onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#004182'}
-                onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#0a66c2'}
+            <div className="about-founder-linkedin-badge" style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'center' }}>
+              <div 
+                className="badge-base LI-profile-badge" 
+                data-locale="en_US" 
+                data-size="medium" 
+                data-theme="dark" 
+                data-type="HORIZONTAL" 
+                data-vanity="the-maryam-fatima" 
+                data-version="v1"
               >
-                <FaLinkedin size={20} />
-                Connect on LinkedIn
-              </a>
+                <a className="badge-base__link LI-simple-link" href="https://pk.linkedin.com/in/the-maryam-fatima?trk=profile-badge">
+                  Maryam Fatima
+                </a>
+              </div>
             </div>
           </aside>
 
