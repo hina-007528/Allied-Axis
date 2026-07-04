@@ -56,8 +56,8 @@ export default function AboutFounderSection() {
             <p className="about-founder-profile-name">Maryam Fatima</p>
             <p className="about-founder-profile-role">Founder &amp; CEO, Allied Axis</p>
             
-            <div className="about-founder-linkedin-badge" style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'center', width: '100%', overflow: 'visible' }}>
-              <div style={{ transform: 'scale(0.60)', transformOrigin: 'top center', width: '320px', height: '135px', display: 'flex', justifyContent: 'center' }}>
+            <div className="about-founder-linkedin-badge" style={{ marginTop: '0.75rem', display: 'flex', justifyContent: 'center', width: '100%', overflow: 'visible' }}>
+              <div style={{ transform: 'scale(0.60)', transformOrigin: 'top center', width: '320px', height: '175px', display: 'flex', justifyContent: 'center' }}>
                 <div 
                   className="badge-base LI-profile-badge" 
                   data-locale="en_US" 
