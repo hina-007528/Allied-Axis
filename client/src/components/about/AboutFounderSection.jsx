@@ -1,4 +1,4 @@
-import { FaCheck, FaLinkedin } from 'react-icons/fa';
+import { FaCheck } from 'react-icons/fa';
 import {
   founderAchievements,
   founderCertifications,
@@ -42,41 +42,20 @@ export default function AboutFounderSection() {
             <p className="about-founder-profile-name">Maryam Fatima</p>
             <p className="about-founder-profile-role">Founder &amp; CEO, Allied Axis</p>
             
-            <div className="about-founder-linkedin-wrap" style={{ marginTop: '1.5rem', textAlign: 'center' }}>
-              <a 
-                href="https://pk.linkedin.com/in/the-maryam-fatima" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="interactive-card-hover"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '0.8rem',
-                  padding: '12px 28px',
-                  border: '1px solid rgba(255, 255, 255, 0.15)',
-                  backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                  color: '#ffffff',
-                  borderRadius: '50px',
-                  fontWeight: '500',
-                  textDecoration: 'none',
-                  fontSize: '0.95rem',
-                  backdropFilter: 'blur(10px)',
-                  transition: 'all 0.3s ease',
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.backgroundColor = '#0a66c2';
-                  e.currentTarget.style.borderColor = '#0a66c2';
-                  e.currentTarget.style.boxShadow = '0 0 20px rgba(10, 102, 194, 0.4)';
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.05)';
-                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)';
-                  e.currentTarget.style.boxShadow = 'none';
-                }}
+            <div className="about-founder-linkedin-badge" style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'center' }}>
+              <div 
+                className="badge-base LI-profile-badge" 
+                data-locale="en_US" 
+                data-size="medium" 
+                data-theme="dark" 
+                data-type="HORIZONTAL" 
+                data-vanity="the-maryam-fatima" 
+                data-version="v1"
               >
-                <FaLinkedin size={20} />
-                Connect on LinkedIn
-              </a>
+                <a className="badge-base__link LI-simple-link" href="https://pk.linkedin.com/in/the-maryam-fatima?trk=profile-badge">
+                  Maryam Fatima
+                </a>
+              </div>
             </div>
           </aside>
 
