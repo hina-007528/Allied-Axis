@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { FaCheck } from 'react-icons/fa';
 import {
   founderAchievements,
@@ -17,6 +18,19 @@ function CertTile({ cert }) {
 }
 
 export default function AboutFounderSection() {
+  useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'https://platform.linkedin.com/badges/js/profile.js';
+    script.async = true;
+    script.defer = true;
+    script.type = 'text/javascript';
+    document.body.appendChild(script);
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
+
   return (
     <section className="section about-founder-section">
       <div className="container">
