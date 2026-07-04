@@ -36,7 +36,7 @@ export default function TeamLeadershipCard({ leader }) {
                 <FaEnvelope aria-hidden="true" />
               </a>
               <a
-                href="https://www.linkedin.com/company/alliedaxisdigital/"
+                href="https://www.linkedin.com/in/the-maryam-fatima/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="team-lead-social"
@@ -62,9 +62,20 @@ export default function TeamLeadershipCard({ leader }) {
                 </div>
               </div>
             )}
-            <Link to="/contact" className="btn btn-outline team-lead-cta">
-              Discuss Your Strategy
-            </Link>
+            <div className="team-lead-actions-bottom" style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', marginTop: '24px' }}>
+              <Link to="/contact" className="btn btn-outline team-lead-cta" style={{ margin: 0 }}>
+                Discuss Your Strategy
+              </Link>
+              <a 
+                href="https://www.linkedin.com/in/the-maryam-fatima/" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="btn btn-primary team-lead-cta"
+                style={{ margin: 0, display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'var(--orange)', color: '#fff', borderColor: 'var(--orange)' }}
+              >
+                <FaLinkedinIn /> Connect on LinkedIn
+              </a>
+            </div>
           </>
         )}
 
