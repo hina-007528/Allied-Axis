@@ -41,6 +41,22 @@ export default function AboutFounderSection() {
             </div>
             <p className="about-founder-profile-name">Maryam Fatima</p>
             <p className="about-founder-profile-role">Founder &amp; CEO, Allied Axis</p>
+            
+            <div className="about-founder-linkedin-badge" style={{ marginTop: '1.5rem', display: 'flex', justifyContent: 'center' }}>
+              <div 
+                className="badge-base LI-profile-badge" 
+                data-locale="en_US" 
+                data-size="medium" 
+                data-theme="dark" 
+                data-type="HORIZONTAL" 
+                data-vanity="the-maryam-fatima" 
+                data-version="v1"
+              >
+                <a className="badge-base__link LI-simple-link" href="https://pk.linkedin.com/in/the-maryam-fatima?trk=profile-badge">
+                  Maryam Fatima
+                </a>
+              </div>
+            </div>
           </aside>
 
           <div className="about-founder-body">
