@@ -2868,16 +2868,46 @@ body {
   }
 
   .about-founder-title {
-    font-size: 28px;
+    font-size: 24px;
+    line-height: 1.3;
+  }
+  
+  .about-founder-title-sep {
+    display: none;
+  }
+  
+  .about-founder-title-accent {
+    display: block;
+    margin-top: 4px;
+    font-size: 18px;
+  }
+
+  .about-founder-profile {
+    padding: 24px 10px 20px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
   }
 
   .about-founder-body {
-    padding: 28px 20px 28px;
+    padding: 28px 16px 28px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  
+  .about-founder-body p, 
+  .about-founder-body blockquote {
+    word-break: break-word;
+    hyphens: auto;
   }
 
   .about-founder-certs-grid {
-    grid-template-columns: repeat(5, 44px);
+    grid-template-columns: repeat(4, 44px);
     gap: 8px;
+    max-width: 100%;
   }
 
   .about-founder-cert-tile {
